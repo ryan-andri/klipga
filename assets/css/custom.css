@@ -1,0 +1,39 @@
+.overlay{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    background: rgba(197, 197, 197, 0.8) url("/examples/images/loader.gif") center no-repeat;
+}
+
+body.loading{
+    overflow: hidden;   
+}
+
+body.loading .overlay{
+    display: block;
+}
+
+div.dataTables_length {
+    padding-top: 10px;
+}
+
+.error {
+    outline: 1px solid red;
+}
+
+.disabled{
+    /* opacity: 0.6; */
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: rgba(194, 194, 194, 0.267);
+}
+
+/* sweet alert */
+.swal-icon img{
+    width: 12px !important;
+    height: 12px !important;
+  }
