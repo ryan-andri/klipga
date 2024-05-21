@@ -12,9 +12,9 @@ require('configs/config.php');
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="Ryan Andri" />
-    <link rel="icon" type="image/x-icon" href="<?= BASE_URL ?>/assets/img/hesti.png">
+    <link rel="icon" type="image/x-icon" href="<?= BASE_URL ?>/assets/img/paru.png">
 
-    <title>TBC Dashboard</title>
+    <title>KLIPGA</title>
 
     <link href="<?php echo BASE_URL; ?>/assets/vendor/datatables-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="<?php echo BASE_URL; ?>/assets/vendor/buttons-2.4.2/css/buttons.dataTables.min.css" rel="stylesheet" />
@@ -28,9 +28,12 @@ require('configs/config.php');
 
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="<?php echo BASE_URL; ?>">TBC Dashboard</a>
-        <button class="btn btn-link btn-sm d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <a class="navbar-brand ps-3" href="<?php echo BASE_URL; ?>">KLIPGA
+            <span><img class="img-fluid mb-2 ms-3" src="<?= BASE_URL ?>/assets/img/paru.png" width="35px">
+            </span>
+        </a>
+        <button class="btn btn-link btn-sm ms-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <ul class="navbar-nav d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -59,7 +62,7 @@ require('configs/config.php');
                 </div>
                 <div class="sb-sidenav-footer">
                     <div class="small">Logged in as:</div>
-                    Start Bootstrap
+                    Herlina, S.Kep., Ners
                 </div>
             </nav>
         </div>
@@ -72,7 +75,7 @@ require('configs/config.php');
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-center small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div class="text-muted">Copyright &copy; IT Rumah Sakit Tk. II dr. AK Gani</div>
                     </div>
                 </div>
             </footer>
