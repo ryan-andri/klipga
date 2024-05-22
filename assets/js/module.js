@@ -1,11 +1,6 @@
 $(document).ready(function () {
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     // default
     $("#content").load("menu/mod_dashboard.html", function () {
-        sleep(1000);
         const datatablesSimple = document.getElementById('datatablesSimple');
         if (datatablesSimple) {
             new DataTable(datatablesSimple);
@@ -16,7 +11,6 @@ $(document).ready(function () {
     // -----------
     $("#nav_dashboard").on("click", function () {
         $("#content").load("menu/mod_dashboard.html", function () {
-            sleep(1000);
             const datatablesSimple = document.getElementById('datatablesSimple');
             if (datatablesSimple) {
                 new DataTable(datatablesSimple);
@@ -25,14 +19,11 @@ $(document).ready(function () {
     });
 
     $("#nav_data_pasien").on("click", function () {
-        sleep(2000);
         $("#content").load("menu/mod_data_pasien.html", function () {
             var today = new Date().toISOString().split("T")[0];
             var tabel_pasien = "";
 
             $("#input_tgl_filter").val(today);
-
-            sleep(1000);
 
             load_data(today);
 
@@ -65,14 +56,12 @@ $(document).ready(function () {
                         {
                             text: "Tambah Data",
                             action: function (e, dt, node, config) {
-                                $("#form_peserta")[0].reset();
-                                $("#modal_peserta").modal("show");
+                                $("#simpan_pasien").text("Simpan").removeClass("disabled");
+                                $("#form_pasien")[0].reset();
+                                $("#modal_pasien").modal("show");
                                 // hidden value
                                 $("#hid").val("1");
                                 $("#action").val("insert");
-                                // init date
-                                $("#input_tgl_daftar").val(new Date().toISOString().split("T")[0]);
-                                $("#input_tgl_daftar").prop("readonly", true);
                             },
                             enabled: true
                         },
@@ -185,14 +174,13 @@ $(document).ready(function () {
                         },
                         {
                             data: "dp_kelamin",
+                            orderable: false
                         },
+                        {
+                            data: "dp_tgl_input",
+                            orderable: false
+                        }
                     ],
-                    // rowCallback: function (row, data, index) {
-                    //     console.log(data)
-                    //     if (data.status_bayar == 0) {
-                    //         $("td", row).css("background-color", "grey");
-                    //     }
-                    // }
                 });
             }
 
@@ -211,9 +199,119 @@ $(document).ready(function () {
             }
 
             $("#input_tgl_filter").on("change", function () {
+                tabel_pasien.clear();
                 tabel_pasien.destroy();
                 load_data($("#input_tgl_filter").val().toString());
             });
+
+            function validation(input) {
+                let ele = "empty";
+                let valid = true;
+
+                switch (input) {
+                    case "pasien":
+                        ele = "#form_pasien input, #form_pasien select";
+                        break;
+                    case "skd":
+                        ele = "#form_skd input, #form_skd select";
+                        break;
+                }
+
+                $(ele).each(function () {
+                    if ($.trim($(this).val()).length == 0) {
+                        $(this).addClass("error");
+                        valid = false;
+                        $(this).focus();
+                    } else {
+                        $(this).removeClass("error");
+                    }
+                });
+                return valid;
+            }
+
+            $("#simpan_pasien").on("click", function () {
+                if (!validation("pasien")) {
+                    alert("Bagian form tidak boleh ada yang kosong.")
+                    return;
+                }
+
+                let df = $("#form_pasien").serializeArray();
+                df.push({ name: "input_tgl_input", value: today });
+
+                let action = $("#action").val().toString();
+                let hid = $("#hid").val().toString();
+
+                // lock button before send data
+                $(this).text("Menyimpan Data ...").addClass("disabled");
+
+                $.ajax({
+                    url: "payload.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: "action=" + action + "&"
+                        + "id=" + hid + "&"
+                        + $.param(df),
+                    success: function (response) {
+                        switch (response) {
+                            case "success":
+                                $("#modal_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil disimpan!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "updated":
+                                $("#modal_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil diupdate!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "exist":
+                                $("#modal_pasien").modal("hide");
+                                swal({
+                                    text: "Data sudah ada pada hari ini",
+                                    icon: "info",
+                                    button: false,
+                                });
+                                break;
+                            case "failed":
+                            case "error":
+                                $(this).text("Simpan").removeClass("disabled");
+                                swal({
+                                    text: "Data gagal disimpan!",
+                                    icon: "error",
+                                    button: false,
+                                });
+                                break;
+                        }
+                        tabel_pasien.ajax.reload();
+                        clearnbtn();
+                    }
+                });
+            });
+
+            $("#input_tgl_lahir").on("change", function () {
+                date = getAge($("#input_tgl_lahir").val());
+                $("#input_umur").val(date[0]);
+                $("#input_umur_bulan").val(date[1]);
+            });
+
+            function getAge(date) {
+                if (date == "") return;
+                var now = new Date();
+                var entry = new Date(date);
+                var year = now.getFullYear() - entry.getFullYear();
+                if (now.getMonth() >= entry.getMonth()) {
+                    var month = now.getMonth() - entry.getMonth();
+                } else {
+                    year--;
+                    var month = 12 + now.getMonth() - entry.getMonth();
+                }
+                return new Array(year + " Tahun", month + " Bulan");
+            }
         });
     });
 });

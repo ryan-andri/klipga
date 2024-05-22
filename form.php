@@ -21,10 +21,6 @@ require('configs/config.php');
     <script src="<?php echo BASE_URL; ?>/assets/vendor/fontawesome-6.3.0/all.js"></script>
 
     <style>
-        /* body {
-            background-color: #FAD5A5 !important;
-        } */
-
         ::-webkit-scrollbar {
             display: none;
         }
@@ -159,7 +155,7 @@ require('configs/config.php');
         </main>
         <footer class="py-2 mt-auto">
             <div class="d-flex justify-content-center small">
-                <div>Copyright &copy; Your Website 2023</div>
+                <div>Copyright &copy; IT Rumah Sakit Tk. II dr. AK Gani</div>
             </div>
         </footer>
     </div>

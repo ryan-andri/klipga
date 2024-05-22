@@ -7,6 +7,53 @@ $cmd = !empty($_POST["action"]) ? $_POST["action"] : '';
 $db = DBConnection::getInstance();
 
 switch ($cmd) {
+    case 'insert':
+    case 'update':
+        try {
+            $query = "SELECT dp_nik, dp_tgl_input FROM data_pasien WHERE dp_nik ='" . $_POST['input_nik'] . "' AND dp_tgl_input = '" . $_POST['input_tgl_input'] . "'";
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            $indexed = [
+                htmlspecialchars($_POST['input_nama']),
+                htmlspecialchars($_POST['input_nama_panggilan']),
+                htmlspecialchars($_POST['input_nik']),
+                htmlspecialchars($_POST['input_bpjs']),
+                htmlspecialchars($_POST['input_alamat']),
+                htmlspecialchars($_POST['input_pekerjaan']),
+                htmlspecialchars($_POST['input_kelamin']),
+                htmlspecialchars($_POST['input_usia_subur']),
+                htmlspecialchars($_POST['input_tgl_lahir']),
+                htmlspecialchars($_POST['input_berat_badan']),
+                htmlspecialchars($_POST['input_tinggi_badan']),
+                htmlspecialchars($_POST['input_imun_bcg']),
+                htmlspecialchars($_POST['input_skor_tb_anak']),
+                htmlspecialchars($_POST['input_nohp']),
+                htmlspecialchars($_POST['input_petugas_kes']),
+                htmlspecialchars($_POST['input_tgl_input'])
+            ];
+
+            sleep(1);
+
+            if ($result) {
+                if ($_POST["action"] == "update") {
+                    $query = "UPDATE data_pasien SET dp_nama=?, dp_panggilan=?, dp_nik=?, dp_bpjs=?, dp_alamat=?, dp_pekerjaan=?, dp_kelamin=?, dp_usia_subur=?, dp_tgl_lahir=?, dp_berat_badan=?, dp_tinggi_badan=?, dp_imun_bcg=?, dp_skor_tb_anak=?, dp_nohp=?, dp_petugas_kes=?, dp_tgl_input=? WHERE id=" . $_POST['id'];
+                    $stmt = $db->prepare($query);
+                    $res = $stmt->execute($indexed);
+                    echo json_encode($res ? "updated" : "failed");
+                } else {
+                    echo json_encode("exist");
+                }
+            } else {
+                $query = "INSERT INTO data_pasien (dp_nama, dp_panggilan, dp_nik, dp_bpjs, dp_alamat, dp_pekerjaan, dp_kelamin, dp_usia_subur, dp_tgl_lahir, dp_berat_badan, dp_tinggi_badan, dp_imun_bcg, dp_skor_tb_anak, dp_nohp, dp_petugas_kes, dp_tgl_input) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                $stmt = $db->prepare($query);
+                $res = $stmt->execute($indexed);
+                echo json_encode($res ? "success" : "failed");
+            }
+        } catch (PDOException $e) {
+            echo json_encode("error");
+        }
+        break;
     case 'load_pasien':
         try {
             $draw = $_POST['draw'];
@@ -18,20 +65,20 @@ switch ($cmd) {
             $searchValue = $_POST['search']['value'];
             $filter_date = $_POST['filter_date'];
 
-            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien ");
+            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien WHERE dp_status=1");
             $stmt->execute();
             $records = $stmt->fetch();
             $totalRecords = $records['allcount'];
 
             $date_filter = " ";
             if (!empty($filter_date)) {
-                $date_filter = " AND data_pasien.dp_tgl_input = '" . $filter_date . "' ";
+                $date_filter = "AND data_pasien.dp_tgl_input = '" . $filter_date . "' ";
             }
 
             $searchArray = array();
             $searchQuery = " ";
             if (!empty($searchValue)) {
-                $searchQuery = " AND (data_pasien.dp_nama LIKE :dp_nama OR data_pasien.dp_nik LIKE :dp_nik
+                $searchQuery = "AND (data_pasien.dp_nama LIKE :dp_nama OR data_pasien.dp_nik LIKE :dp_nik
                     OR data_pasien.dp_panggilan LIKE :dp_panggilan OR data_pasien.dp_nohp LIKE :dp_nohp
                     OR data_pasien.dp_kelamin LIKE :dp_kelamin OR data_pasien.dp_bpjs LIKE :dp_bpjs) ";
                 $searchArray = array(
@@ -44,14 +91,16 @@ switch ($cmd) {
                 );
             }
 
-            $final_filter = "1" . $date_filter . $searchQuery;
+            $final_filter = " 1 AND dp_status=1 " . $date_filter . $searchQuery;
 
-            sleep(1);
+            usleep(500000);
 
-            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien WHERE " . $final_filter);
+            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien WHERE" . $final_filter);
             $stmt->execute($searchArray);
             $records = $stmt->fetch();
             $totalRecordwithFilter = $records['allcount'];
+
+            usleep(500000);
 
             $stmt = $db->prepare("SELECT * FROM data_pasien WHERE "
                 . $final_filter . " ORDER BY " . $columnName . " "
@@ -88,6 +137,9 @@ switch ($cmd) {
                     'dp_tgl_input' => $row['dp_tgl_input']
                 );
             }
+
+            usleep(500000);
+
             echo json_encode(array(
                 "draw" => intval($draw),
                 "recordsTotal" => $totalRecords,
