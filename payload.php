@@ -48,7 +48,26 @@ switch ($cmd) {
                 $query = "INSERT INTO data_pasien (dp_nama, dp_panggilan, dp_nik, dp_bpjs, dp_alamat, dp_pekerjaan, dp_kelamin, dp_usia_subur, dp_tgl_lahir, dp_berat_badan, dp_tinggi_badan, dp_imun_bcg, dp_skor_tb_anak, dp_nohp, dp_petugas_kes, dp_tgl_input) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                 $stmt = $db->prepare($query);
                 $res = $stmt->execute($indexed);
-                echo json_encode($res ? "success" : "failed");
+                if ($res) {
+                    $dt_pmo = [
+                        htmlspecialchars($db->lastInsertId()),
+                        htmlspecialchars($_POST['input_pmo_nama']),
+                        htmlspecialchars($_POST['input_pmo_telp']),
+                        htmlspecialchars($_POST['input_pmo_alamat']),
+                        htmlspecialchars($_POST['input_pmo_fasyankes']),
+                        htmlspecialchars($_POST['input_pmo_kota']),
+                        htmlspecialchars($_POST['input_pmo_tbc3_fasyankes']),
+                        htmlspecialchars($_POST['input_pmo_tahun']),
+                        htmlspecialchars($_POST['input_pmo_provinsi']),
+                        htmlspecialchars($_POST['input_pmo_tbc3_kota'])
+                    ];
+                    $query = "INSERT INTO data_pmo (dp_id, pmo_nama, pmo_alamat, pmo_fasyankes, pmo_kota, pmo_tbc3_faskes, pmo_tahun, pmo_provinsi, pmo_tbc3_kota, pmo_telpon) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                    $stmt = $db->prepare($query);
+                    $pmo = $stmt->execute($dt_pmo);
+                    echo json_encode($pmo ? "success" : "failed");
+                } else {
+                    echo json_encode("failed");
+                }
             }
         } catch (PDOException $e) {
             echo json_encode("error");

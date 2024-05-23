@@ -19,9 +19,14 @@
                 <div class="modal-body">
                     <form id="form_pasien">
                         <div class="row">
+                            <!-- DATA PASIEN -->
+                            <div class="text-center">
+                                <hr class="hr hr-blurry mt-0" />
+                                <strong>DATA PASIEN</strong>
+                                <hr class="hr hr-blurry" />
+                            </div>
                             <input type="text" name="action" class="form-control" id="action" hidden>
                             <input type="text" name="hid" class="form-control" id="hid" hidden>
-                            <!-- Col 1  -->
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="input_nama" class="form-control" id="input_nama"
@@ -89,7 +94,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Col 2  -->
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -142,6 +146,67 @@
                                         <option value="Ya">Ya</option>
                                     </select>
                                     <label for="input_petugas_kes">Petugas Kesehatan</label>
+                                </div>
+                            </div>
+                            <!-- DATA PMO -->
+                            <div class="text-center">
+                                <hr class="hr hr-blurry" />
+                                <strong>DATA PMO</strong>
+                                <hr class="hr hr-blurry" />
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="input_pmo_nama" class="form-control"
+                                                id="input_pmo_nama" placeholder="Nama PMO">
+                                            <label for="input_pmo_nama">Nama PMO</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="input_pmo_telp" class="form-control"
+                                                id="input_pmo_telp" placeholder="No. Telp/HP">
+                                            <label for="input_pmo_telp">No. Telp/HP</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="input_pmo_alamat" class="form-control"
+                                        id="input_pmo_alamat" placeholder="Alamat PMO">
+                                    <label for="input_pmo_alamat">Alamat PMO</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="input_pmo_fasyankes" class="form-control"
+                                        id="input_pmo_fasyankes" placeholder="Nama Fasyankes">
+                                    <label for="input_pmo_fasyankes">Nama Fasyankes</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="input_pmo_kota" class="form-control" id="input_pmo_kota"
+                                        placeholder="Kab/Kota">
+                                    <label for="input_pmo_kota">Kab/Kota</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="input_pmo_tbc3_fasyankes" class="form-control"
+                                        id="input_pmo_tbc3_fasyankes" placeholder="No. Reg TBC.03 Fasyankes">
+                                    <label for="input_pmo_tbc3_fasyankes">No. Reg TBC.03 Fasyankes</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="number" min="0" max="2099" name="input_pmo_tahun" class="form-control"
+                                        id="input_pmo_tahun" placeholder="Tahun">
+                                    <label for="input_pmo_tahun">Tahun</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="input_pmo_provinsi" class="form-control"
+                                        id="input_pmo_provinsi" placeholder="Provinsi">
+                                    <label for="input_pmo_provinsi">Provinsi</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="input_pmo_tbc3_kota" class="form-control"
+                                        id="input_pmo_tbc3_kota" placeholder="No. Reg TBC.03 Kab/Kota">
+                                    <label for="input_pmo_tbc3_kota">No. Reg TBC.03 Kab/Kota</label>
                                 </div>
                             </div>
                         </div>

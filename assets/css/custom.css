@@ -38,3 +38,9 @@ div.dataTables_length {
     height: 12px !important;
   }
 
+@media (min-width: 768px) {
+    .modal-xl {
+      min-width: 93% !important;
+      max-width: 1200px !important;
+    }
+}
