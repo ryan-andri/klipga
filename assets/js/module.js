@@ -1,6 +1,10 @@
 $(document).ready(function () {
     // default
     $("#content").load("menu/mod_dashboard.html", function () {
+        $("#loading").removeClass("d-none");
+
+        get_data_dashboard();
+
         const datatablesSimple = document.getElementById('datatablesSimple');
         if (datatablesSimple) {
             new DataTable(datatablesSimple);
@@ -11,12 +15,47 @@ $(document).ready(function () {
     // -----------
     $("#nav_dashboard").on("click", function () {
         $("#content").load("menu/mod_dashboard.html", function () {
+            $("#loading").removeClass("d-none");
+
+            get_data_dashboard();
+
             const datatablesSimple = document.getElementById('datatablesSimple');
             if (datatablesSimple) {
                 new DataTable(datatablesSimple);
             }
         });
     });
+
+    function get_data_dashboard() {
+        $.ajax({
+            url: "payload.php",
+            type: "POST",
+            dataType: "json",
+            data: {
+                action: "dashboard",
+                today: today = new Date().toISOString().split("T")[0]
+            },
+            success: function (response) {
+                switch (response.status) {
+                    case "success":
+                        $("#total_records").text(response.allrecords + " orang");
+                        $("#today_record").text(response.todayrecords + " orang");
+                        break;
+                    case "failed":
+                        console.log(response.messages);
+                        break;
+                }
+            },
+            complete: function () {
+                $("#loading").addClass("d-none");
+                $("#sub_content").removeClass("d-none");
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+                $("#loading").addClass("d-none");
+            }
+        });
+    }
 
     $("#nav_data_pasien").on("click", function () {
         $("#content").load("menu/mod_data_pasien.html", function () {
@@ -161,19 +200,19 @@ $(document).ready(function () {
                             orderable: false
                         },
                         {
-                            data: "dp_tgl_lahir",
-                            orderable: false
-                        },
-                        {
                             data: "dp_nik",
                             orderable: false
                         },
                         {
-                            data: "dp_nohp",
+                            data: "dp_tgl_lahir",
                             orderable: false
                         },
                         {
                             data: "dp_kelamin",
+                            orderable: false
+                        },
+                        {
+                            data: "dp_nohp",
                             orderable: false
                         },
                         {
@@ -230,8 +269,16 @@ $(document).ready(function () {
             }
 
             $("#simpan_pasien").on("click", function () {
+                // Laki laki gak mungkin hamil!
+                if ($("#input_kelamin").val() == "Laki-Laki") {
+                    if ($("#input_usia_subur").val() != "-") {
+                        alert("Inspek element jangan di ubah ya Heker!");
+                        return;
+                    }
+                }
+
                 if (!validation("pasien")) {
-                    alert("Bagian form tidak boleh ada yang kosong.")
+                    alert("Bagian form tidak boleh ada yang kosong.");
                     return;
                 }
 
@@ -294,13 +341,23 @@ $(document).ready(function () {
             });
 
             $("#input_tgl_lahir").on("change", function () {
-                date = getAge($("#input_tgl_lahir").val());
+                var date = getAge($("#input_tgl_lahir").val());
                 $("#input_umur").val(date[0]);
                 $("#input_umur_bulan").val(date[1]);
             });
 
+            // Laki laki gak mungkin hamil!
+            $("#input_kelamin").on("change", function () {
+                if ($(this).val() == "Laki-Laki") {
+                    $("#input_usia_subur").val("-");
+                    $("#input_usia_subur").prop('disabled', true);
+                } else {
+                    $("#input_usia_subur").prop('disabled', false);
+                }
+            });
+
             function getAge(date) {
-                if (date == "") return;
+                if (date == "") return new Array("", "");
                 var now = new Date();
                 var entry = new Date(date);
                 var year = now.getFullYear() - entry.getFullYear();

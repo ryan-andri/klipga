@@ -1,13 +1,16 @@
-<h3>Data Pasien</h3>
 <div class="card mt-2">
-    <div class="row ms-1 mt-2">
-        <div class="col-sm-3">
-            <div class="form-floating">
-                <input class="form-control" id="input_tgl_filter" type="date" name="input_tgl_filter" />
-                <label for="input_tgl_filter">Tanggal Filter</label>
+    <div class="card-header">
+        <h3>Data Pasien</h3>
+        <div class="row mt-2 mb-2">
+            <div class="col-sm-3">
+                <div class="form-floating">
+                    <input class="form-control" id="input_tgl_filter" type="date" name="input_tgl_filter" />
+                    <label for="input_tgl_filter">Tanggal Filter</label>
+                </div>
             </div>
         </div>
     </div>
+
     <!-- Modal Tambah Pasien -->
     <div class="modal fade" id="modal_pasien" tabindex="-1" aria-labelledby="tambahPasien" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -20,10 +23,10 @@
                     <form id="form_pasien">
                         <div class="row">
                             <!-- DATA PASIEN -->
-                            <div class="text-center">
-                                <hr class="hr hr-blurry mt-0" />
-                                <strong>DATA PASIEN</strong>
-                                <hr class="hr hr-blurry" />
+                            <div class="d-flex justify-content-center">
+                                <div class="text-center form-control bg-dark mb-3 p-2">
+                                    <strong class="text-light">DATA PASIEN</strong>
+                                </div>
                             </div>
                             <input type="text" name="action" class="form-control" id="action" hidden>
                             <input type="text" name="hid" class="form-control" id="hid" hidden>
@@ -53,7 +56,7 @@
                                         <div class="form-floating mb-3">
                                             <select name="input_kelamin" class="form-select" id="input_kelamin"
                                                 placeholder="Jenis Kelamin">
-                                                <option value="" selected disabled>-</option>
+                                                <option value="-" selected disabled>-</option>
                                                 <option value="Laki-Laki">Laki-Laki</option>
                                                 <option value="Perempuan">Perempuan</option>
                                             </select>
@@ -149,10 +152,10 @@
                                 </div>
                             </div>
                             <!-- DATA PMO -->
-                            <div class="text-center">
-                                <hr class="hr hr-blurry" />
-                                <strong>DATA PMO</strong>
-                                <hr class="hr hr-blurry" />
+                            <div class="d-flex justify-content-center">
+                                <div class="text-center form-control bg-dark mb-3 p-2">
+                                    <strong class="text-light">DATA PMO</strong>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="row">
@@ -226,10 +229,10 @@
                 <tr>
                     <th>No</th>
                     <th>Nama</th>
-                    <th>Tanggal Lahir</th>
                     <th>No NIK</th>
-                    <th>Nomor HP</th>
+                    <th>Tanggal Lahir</th>
                     <th>Jenis Kelamin</th>
+                    <th>Nomor HP</th>
                     <th>Tanggal Input</th>
                 </tr>
             </thead>

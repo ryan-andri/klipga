@@ -37,10 +37,28 @@ switch ($cmd) {
 
             if ($result) {
                 if ($_POST["action"] == "update") {
-                    $query = "UPDATE data_pasien SET dp_nama=?, dp_panggilan=?, dp_nik=?, dp_bpjs=?, dp_alamat=?, dp_pekerjaan=?, dp_kelamin=?, dp_usia_subur=?, dp_tgl_lahir=?, dp_berat_badan=?, dp_tinggi_badan=?, dp_imun_bcg=?, dp_skor_tb_anak=?, dp_nohp=?, dp_petugas_kes=?, dp_tgl_input=? WHERE id=" . $_POST['id'];
+                    $query = "UPDATE data_pasien SET dp_nama=?, dp_panggilan=?, dp_nik=?, dp_bpjs=?, dp_alamat=?, dp_pekerjaan=?, dp_kelamin=?, dp_usia_subur=?, dp_tgl_lahir=?, dp_berat_badan=?, dp_tinggi_badan=?, dp_imun_bcg=?, dp_skor_tb_anak=?, dp_nohp=?, dp_petugas_kes=?, dp_tgl_input=? WHERE id=" . $_POST['dp_id'];
                     $stmt = $db->prepare($query);
                     $res = $stmt->execute($indexed);
-                    echo json_encode($res ? "updated" : "failed");
+                    if ($res) {
+                        $dt_pmo = [
+                            htmlspecialchars($_POST['input_pmo_nama']),
+                            htmlspecialchars($_POST['input_pmo_telp']),
+                            htmlspecialchars($_POST['input_pmo_alamat']),
+                            htmlspecialchars($_POST['input_pmo_fasyankes']),
+                            htmlspecialchars($_POST['input_pmo_kota']),
+                            htmlspecialchars($_POST['input_pmo_tbc3_fasyankes']),
+                            htmlspecialchars($_POST['input_pmo_tahun']),
+                            htmlspecialchars($_POST['input_pmo_provinsi']),
+                            htmlspecialchars($_POST['input_pmo_tbc3_kota'])
+                        ];
+                        $query = "UPDATE data_pmo SET pmo_nama=?, pmo_alamat=?, pmo_fasyankes=?, pmo_kota=?, pmo_tbc3_faskes=?, pmo_tahun=?, pmo_provinsi=?, pmo_tbc3_kota=?, pmo_telpon=? WHERE pmo_id=" . $_POST['pmo_id'];
+                        $stmt = $db->prepare($query);
+                        $pmo = $stmt->execute($dt_pmo);
+                        echo json_encode($pmo ? "success" : "failed");
+                    } else {
+                        echo json_encode("failed");
+                    }
                 } else {
                     echo json_encode("exist");
                 }
@@ -112,14 +130,14 @@ switch ($cmd) {
 
             $final_filter = " 1 AND dp_status=1 " . $date_filter . $searchQuery;
 
-            usleep(500000);
+            // usleep(500000);
 
             $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien WHERE" . $final_filter);
             $stmt->execute($searchArray);
             $records = $stmt->fetch();
             $totalRecordwithFilter = $records['allcount'];
 
-            usleep(500000);
+            // usleep(500000);
 
             $stmt = $db->prepare("SELECT * FROM data_pasien WHERE "
                 . $final_filter . " ORDER BY " . $columnName . " "
@@ -157,7 +175,7 @@ switch ($cmd) {
                 );
             }
 
-            usleep(500000);
+            // usleep(500000);
 
             echo json_encode(array(
                 "draw" => intval($draw),
@@ -172,6 +190,42 @@ switch ($cmd) {
                 "recordsFiltered" => 0,
                 "data" => null
             ));
+        }
+        break;
+    case 'dashboard':
+        try {
+            $today = $_POST['today'];
+            $query = "SELECT COUNT(*) AS allrecords FROM data_pasien WHERE dp_status=1 ";
+
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $records = $stmt->fetch();
+            $allrecords = $records['allrecords'];
+
+            sleep(1);
+
+            $stmt = $db->prepare($query . "AND dp_tgl_input = '" . $today . "'");
+            $stmt->execute();
+            $records = $stmt->fetch();
+            $todayrecords = $records['allrecords'];
+
+            echo json_encode(
+                array(
+                    "status" => "success",
+                    "allrecords" => $allrecords,
+                    "todayrecords" => $todayrecords,
+                    "messages" => ""
+                )
+            );
+        } catch (PDOException $e) {
+            echo json_encode(
+                array(
+                    "status" => "failed",
+                    "allrecords" => 0,
+                    "todayrecords" => 0,
+                    "messages" => $e
+                )
+            );
         }
         break;
     default:

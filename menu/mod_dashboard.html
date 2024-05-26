@@ -1,67 +1,76 @@
 <h3>Dashboard</h3>
-<div class="row mt-4">
-    <div class="col-md-6">
-        <div class="card bg-light text-dark mb-4">
-            <div class="card-header"><strong>Total Pasien</strong></div>
-            <div class="card-body">120 Orang</div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-dark stretched-link" href="#">View Details</a>
-                <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="card bg-light text-dark mb-4">
-            <div class="card-header"><strong>Jumlah Pasien Hari ini</strong></div>
-            <div class="card-body">12 Orang</div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-dark stretched-link" href="#">View Details</a>
-                <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
-            </div>
-        </div>
+<div class="d-flex justify-content-center" id="loading">
+    <div class="spinner-grow" role="status">
+        <span class="visually-hidden">Loading...</span>
     </div>
 </div>
+<div class="d-none" id="sub_content">
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card bg-light text-dark mb-4">
+                <div class="card-header"><strong>Total Pasien</strong></div>
+                <div class="card-body">
+                    <div id="total_records"></div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-dark stretched-link" href="#">View Details</a>
+                    <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
 
-<div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-table me-1"></i>
-        <strong>Contoh table data Pasien</strong>
+        <div class="col-md-6">
+            <div class="card bg-light text-dark mb-4">
+                <div class="card-header"><strong>Jumlah Pasien Hari ini</strong></div>
+                <div class="card-body" id="today_record"></div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-dark stretched-link" href="#">View Details</a>
+                    <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <table id="datatablesSimple">
-            <thead>
-                <tr>
-                    <th>Nama</th>
-                    <th>Tempat Lahir</th>
-                    <th>Tanggal Lahir</th>
-                    <th>Nomor HP</th>
-                    <th>Jenis Kelamin</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Dika Julianto</td>
-                    <td>Palembang</td>
-                    <td>2011/04/25</td>
-                    <td>081122334455</td>
-                    <td>Laki - Laki</td>
-                </tr>
-                <tr>
-                    <td>Diana Sari</td>
-                    <td>Bogor</td>
-                    <td>2011/04/25</td>
-                    <td>0811999231455</td>
-                    <td>Perempuan</td>
-                </tr>
-                <tr>
-                    <td>Andre Taulani</td>
-                    <td>Bandung</td>
-                    <td>2011/04/25</td>
-                    <td>0811999231455</td>
-                    <td>Laki - Laki</td>
-                </tr>
-            </tbody>
-        </table>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            <strong>Contoh table data Pasien</strong>
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Tempat Lahir</th>
+                        <th>Tanggal Lahir</th>
+                        <th>Nomor HP</th>
+                        <th>Jenis Kelamin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dika Julianto</td>
+                        <td>Palembang</td>
+                        <td>2011/04/25</td>
+                        <td>081122334455</td>
+                        <td>Laki - Laki</td>
+                    </tr>
+                    <tr>
+                        <td>Diana Sari</td>
+                        <td>Bogor</td>
+                        <td>2011/04/25</td>
+                        <td>0811999231455</td>
+                        <td>Perempuan</td>
+                    </tr>
+                    <tr>
+                        <td>Andre Taulani</td>
+                        <td>Bandung</td>
+                        <td>2011/04/25</td>
+                        <td>0811999231455</td>
+                        <td>Laki - Laki</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
