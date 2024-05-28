@@ -30,8 +30,14 @@ switch ($cmd) {
                 htmlspecialchars($_POST['input_skor_tb_anak']),
                 htmlspecialchars($_POST['input_nohp']),
                 htmlspecialchars($_POST['input_petugas_kes']),
-
-                
+                htmlspecialchars($_POST['input_uji_tbc']),
+                htmlspecialchars($_POST['input_date_toraks']),
+                htmlspecialchars($_POST['input_toraks_seri']),
+                htmlspecialchars($_POST['input_toraks_kesan']),
+                htmlspecialchars($_POST['input_date_fnab']),
+                htmlspecialchars($_POST['input_hasil_fnab']),
+                htmlspecialchars($_POST['input_uji_nondahak']),
+                htmlspecialchars($_POST['input_nama_nonmtb']),
                 htmlspecialchars($_POST['input_tgl_input'])
             ];
 
@@ -72,14 +78,14 @@ switch ($cmd) {
                     $dt_pmo = [
                         htmlspecialchars($db->lastInsertId()),
                         htmlspecialchars($_POST['input_pmo_nama']),
-                        htmlspecialchars($_POST['input_pmo_telp']),
                         htmlspecialchars($_POST['input_pmo_alamat']),
                         htmlspecialchars($_POST['input_pmo_fasyankes']),
                         htmlspecialchars($_POST['input_pmo_kota']),
                         htmlspecialchars($_POST['input_pmo_tbc3_fasyankes']),
                         htmlspecialchars($_POST['input_pmo_tahun']),
                         htmlspecialchars($_POST['input_pmo_provinsi']),
-                        htmlspecialchars($_POST['input_pmo_tbc3_kota'])
+                        htmlspecialchars($_POST['input_pmo_tbc3_kota']),
+                        htmlspecialchars($_POST['input_pmo_telp'])
                     ];
                     $query = "INSERT INTO data_pmo (dp_id, pmo_nama, pmo_alamat, pmo_fasyankes, pmo_kota, pmo_tbc3_faskes, pmo_tahun, pmo_provinsi, pmo_tbc3_kota, pmo_telpon) VALUES (?,?,?,?,?,?,?,?,?,?)";
                     $stmt = $db->prepare($query);
