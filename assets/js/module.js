@@ -73,7 +73,8 @@ $(document).ready(function () {
                     processing: true,
                     serverSide: true,
                     select: true,
-                    stateSave: true,
+                    // stateSave: true,
+                    pageLength: 10,
                     ajax: {
                         url: "payload.php",
                         type: "POST",
@@ -83,13 +84,13 @@ $(document).ready(function () {
                             action: "load_pasien",
                             filter_date: fdate
                         },
-                        // always clear button
                         complete: function () {
                             clearnbtn();
                         },
-                        error: function () {
+                        error: function (xhr, status, error) {
+                            console.log(error);
                             clearnbtn();
-                        }
+                        },
                     },
                     buttons: [
                         {
@@ -97,6 +98,8 @@ $(document).ready(function () {
                             action: function (e, dt, node, config) {
                                 $("#simpan_pasien").text("Simpan").removeClass("disabled");
                                 $("#form_pasien")[0].reset();
+                                $("#input_nama_nonmtb").val("-");
+                                $("#input_nama_nonmtb").prop('disabled', true);
                                 $("#modal_pasien").modal("show");
                                 // hidden value
                                 $("#hid").val("1");
@@ -182,7 +185,7 @@ $(document).ready(function () {
                         {
                             text: "Refresh",
                             action: function (e, dt, node, config) {
-                                tabel_pasien.ajax.reload();
+                                tabel_pasien.ajax.reload(null, false);
                                 clearnbtn();
                             },
                             enabled: true
@@ -241,6 +244,8 @@ $(document).ready(function () {
                 tabel_pasien.clear();
                 tabel_pasien.destroy();
                 load_data($("#input_tgl_filter").val().toString());
+                // force draw after re-init
+                tabel_pasien.draw();
             });
 
             function validation(input) {
@@ -269,14 +274,6 @@ $(document).ready(function () {
             }
 
             $("#simpan_pasien").on("click", function () {
-                // Laki laki gak mungkin hamil!
-                if ($("#input_kelamin").val() == "Laki-Laki") {
-                    if ($("#input_usia_subur").val() != "-") {
-                        alert("Inspek element jangan di ubah ya Heker!");
-                        return;
-                    }
-                }
-
                 if (!validation("pasien")) {
                     alert("Bagian form tidak boleh ada yang kosong.");
                     return;
@@ -285,11 +282,26 @@ $(document).ready(function () {
                 let df = $("#form_pasien").serializeArray();
                 df.push({ name: "input_tgl_input", value: today });
 
+                // force to - value (disabled element)
+                if ($("#input_kelamin").val() == "Laki-Laki") {
+                    df.push({
+                        name: "input_usia_subur",
+                        value: "-"
+                    });
+                }
+                
+                if ($("#input_uji_nondahak").val() != "Bukan MTB") {
+                    df.push({
+                        name: "input_nama_nonmtb",
+                        value: "-"
+                    });
+                }
+
                 let action = $("#action").val().toString();
                 let hid = $("#hid").val().toString();
 
                 // lock button before send data
-                $(this).text("Menyimpan Data ...").addClass("disabled");
+                $("#simpan_pasien").text("Menyimpan Data ...").addClass("disabled");
 
                 $.ajax({
                     url: "payload.php",
@@ -298,6 +310,13 @@ $(document).ready(function () {
                     data: "action=" + action + "&"
                         + "id=" + hid + "&"
                         + $.param(df),
+                    complete: function () {
+                        $("#simpan_pasien").text("Simpan").removeClass("disabled");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        $("#simpan_pasien").text("Simpan").removeClass("disabled");
+                    },
                     success: function (response) {
                         switch (response) {
                             case "success":
@@ -326,7 +345,6 @@ $(document).ready(function () {
                                 break;
                             case "failed":
                             case "error":
-                                $(this).text("Simpan").removeClass("disabled");
                                 swal({
                                     text: "Data gagal disimpan!",
                                     icon: "error",
@@ -334,7 +352,7 @@ $(document).ready(function () {
                                 });
                                 break;
                         }
-                        tabel_pasien.ajax.reload();
+                        tabel_pasien.ajax.reload(null, false);
                         clearnbtn();
                     }
                 });
@@ -353,6 +371,16 @@ $(document).ready(function () {
                     $("#input_usia_subur").prop('disabled', true);
                 } else {
                     $("#input_usia_subur").prop('disabled', false);
+                }
+            });
+
+            $("#input_uji_nondahak").on("change", function () {
+                if ($(this).val() == "Bukan MTB") {
+                    $("#input_nama_nonmtb").val("");
+                    $("#input_nama_nonmtb").prop('disabled', false);
+                } else {
+                    $("#input_nama_nonmtb").val("-");
+                    $("#input_nama_nonmtb").prop('disabled', true);
                 }
             });
 

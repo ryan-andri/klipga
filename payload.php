@@ -30,6 +30,8 @@ switch ($cmd) {
                 htmlspecialchars($_POST['input_skor_tb_anak']),
                 htmlspecialchars($_POST['input_nohp']),
                 htmlspecialchars($_POST['input_petugas_kes']),
+
+                
                 htmlspecialchars($_POST['input_tgl_input'])
             ];
 
@@ -63,7 +65,7 @@ switch ($cmd) {
                     echo json_encode("exist");
                 }
             } else {
-                $query = "INSERT INTO data_pasien (dp_nama, dp_panggilan, dp_nik, dp_bpjs, dp_alamat, dp_pekerjaan, dp_kelamin, dp_usia_subur, dp_tgl_lahir, dp_berat_badan, dp_tinggi_badan, dp_imun_bcg, dp_skor_tb_anak, dp_nohp, dp_petugas_kes, dp_tgl_input) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                $query = "INSERT INTO data_pasien (dp_nama, dp_panggilan, dp_nik, dp_bpjs, dp_alamat, dp_pekerjaan, dp_kelamin, dp_usia_subur, dp_tgl_lahir, dp_berat_badan, dp_tinggi_badan, dp_imun_bcg, dp_skor_tb_anak, dp_nohp, dp_petugas_kes, dp_uji_tbc, dp_date_toraks, dp_toraks_seri, dp_toraks_kesan, dp_date_fnab, dp_hasil_fnab, dp_uji_nondahak, dp_nama_nonmtb, dp_tgl_input) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                 $stmt = $db->prepare($query);
                 $res = $stmt->execute($indexed);
                 if ($res) {
@@ -94,7 +96,7 @@ switch ($cmd) {
     case 'load_pasien':
         try {
             $draw = $_POST['draw'];
-            $row = $_POST['start'];
+            $rows = $_POST['start'];
             $rowperpage = $_POST['length'];
             $columnIndex = $_POST['order'][0]['column'];
             $columnName = $_POST['columns'][$columnIndex]['data'];
@@ -130,14 +132,14 @@ switch ($cmd) {
 
             $final_filter = " 1 AND dp_status=1 " . $date_filter . $searchQuery;
 
-            // usleep(500000);
+            // usleep(200000);
 
             $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien WHERE" . $final_filter);
             $stmt->execute($searchArray);
             $records = $stmt->fetch();
             $totalRecordwithFilter = $records['allcount'];
 
-            // usleep(500000);
+            usleep(400000);
 
             $stmt = $db->prepare("SELECT * FROM data_pasien WHERE "
                 . $final_filter . " ORDER BY " . $columnName . " "
@@ -147,7 +149,7 @@ switch ($cmd) {
                 $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
             }
 
-            $stmt->bindValue(':limit', (int)$row, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', (int)$rows, PDO::PARAM_INT);
             $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
             $stmt->execute();
             $res = $stmt->fetchAll();
@@ -175,7 +177,7 @@ switch ($cmd) {
                 );
             }
 
-            // usleep(500000);
+            // usleep(200000);
 
             echo json_encode(array(
                 "draw" => intval($draw),

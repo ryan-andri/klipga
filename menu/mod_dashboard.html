@@ -1,11 +1,11 @@
 <h3>Dashboard</h3>
-<div class="d-flex justify-content-center" id="loading">
+<div class="d-flex align-items-center justify-content-center mt-5" id="loading">
     <div class="spinner-grow" role="status">
         <span class="visually-hidden">Loading...</span>
     </div>
 </div>
-<div class="d-none" id="sub_content">
-    <div class="row mt-4">
+<div class="mt-4 d-none" id="sub_content">
+    <div class="row">
         <div class="col-md-6">
             <div class="card bg-light text-dark mb-4">
                 <div class="card-header"><strong>Total Pasien</strong></div>
@@ -13,8 +13,9 @@
                     <div id="total_records"></div>
                 </div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-dark stretched-link" href="#">View Details</a>
+                    <!-- <a class="small text-dark stretched-link" href="#">View Details</a> -->
                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
+                    <div class="small text-dark"><i class="fas fa-angle-left"></i></div>
                 </div>
             </div>
         </div>
@@ -24,8 +25,9 @@
                 <div class="card-header"><strong>Jumlah Pasien Hari ini</strong></div>
                 <div class="card-body" id="today_record"></div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-dark stretched-link" href="#">View Details</a>
+                    <!-- <a class="small text-dark stretched-link" href="#">View Details</a> -->
                     <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
+                    <div class="small text-dark"><i class="fas fa-angle-left"></i></div>
                 </div>
             </div>
         </div>
