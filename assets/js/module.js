@@ -73,6 +73,9 @@ $(document).ready(function () {
                     processing: true,
                     serverSide: true,
                     select: true,
+                    language: {
+                        processing: "<div class='spinner-border'></div>",
+                    },
                     // stateSave: true,
                     pageLength: 10,
                     ajax: {
@@ -111,33 +114,50 @@ $(document).ready(function () {
                             text: "Edit",
                             action: function (e, dt, node, config) {
                                 let data = dt.row({ selected: true }).data();
+
+                                $("#form_pasien")[0].reset();
                                 // hidden value
-                                $("#hid").val(data.id.toString());
+                                $("#hid").val(data.dp_id.toString());
                                 $("#action").val("update");
                                 // init value
-                                $("#input_tgl_daftar").val(data.tanggal_daftar.toString());
-                                $("#input_tgl_daftar").prop("readonly", true);
-                                $("#input_nik").val(data.nik.toString());
-                                $("#input_nama").val(data.nama.toString());
-                                $("#input_tempat_lahir").val(data.tempat_lahir.toString());
-                                $("#input_tgl_lahir").val(data.tanggal_lahir.toString());
-                                $("#input_nohp").val(data.nohp.toString());
-                                $("#input_alamat").val(data.alamat.toString());
-                                $("#input_jns_kelamin").val(data.jenis_kelamin.toString()).change();
-                                $("#input_sts_nikah").val(data.status_pernikahan.toString()).change();
-                                $("#input_pekerjaan").val(data.pekerjaan.toString());
-                                $("#input_pendidikan").val(data.pendidikan.toString()).change();
-                                $("#input_gol_darah").val(data.golongan_darah.toString()).change();
-                                $("#status_skd").prop("checked", data.status_skd.toString() == 1 ? true : false);
-                                $("#status_rohani").prop("checked", data.status_rohani.toString() == 1 ? true : false);
-                                $("#status_skbn").prop("checked", data.status_skbn.toString() == 1 ? true : false);
-                                $("#modal_peserta").modal("show");
+                                $("#input_nama").val(data.dp_nama.toString());
+                                $("#input_panggilan").val(data.dp_panggilan.toString());
+                                $("#input_nik").val(data.dp_nik.toString());
+                                $("#input_bpjs").val(data.dp_bpjs.toString());
+                                $("#input_alamat").val(data.dp_alamat.toString());
+                                $("#input_pekerjaan").val(data.dp_pekerjaan.toString());
+                                $("#input_kelamin").val(data.dp_kelamin.toString());
+                                $("#input_usia_subur").val(data.dp_usia_subur.toString());
+                                $("#input_usia_subur").prop('disabled', (data.dp_kelamin.toString() == "Laki-Laki"));
+                                $("#input_tgl_lahir").val(data.dp_tgl_lahir);
+                                $("#input_umur").val(getAge(data.dp_tgl_lahir)[0]);
+                                $("#input_umur_bulan").val(getAge(data.dp_tgl_lahir)[1]);
+                                $("#input_berat_badan").val(data.dp_berat_badan.toString());
+                                $("#input_tinggi_badan").val(data.dp_tinggi_badan.toString());
+                                $("#input_imun_bcg").val(data.dp_imun_bcg.toString());
+                                $("#input_skor_tb_anak").val(data.dp_skor_tb_anak.toString());
+                                $("#input_nohp").val(data.dp_nohp.toString());
+                                $("#input_petugas_kes").val(data.dp_petugas_kes.toString());
+                                $("#input_uji_tbc").val(data.dp_uji_tbc.toString());
+                                $("#input_date_toraks").val(data.dp_date_toraks);
+                                $("#input_toraks_seri").val(data.dp_toraks_seri.toString());
+                                $("#input_toraks_kesan").val(data.dp_toraks_kesan.toString());
+                                $("#input_date_fnab").val(data.dp_date_fnab);
+                                $("#input_hasil_fnab").val(data.dp_hasil_fnab.toString());
+                                $("#input_uji_nondahak").val(data.dp_uji_nondahak.toString());
+                                $("#input_nama_nonmtb").val(data.dp_nama_nonmtb.toString());
+                                $("#input_nama_nonmtb").prop('disabled', (data.dp_uji_nondahak.toString() == "MTB"));
+                                $("#input_tgl_input").val(data.dp_tgl_input);
+                                
+                                $("#modal_pasien").modal("show");
                             },
                             enabled: false
                         },
                         {
                             text: "Hapus",
                             action: function (e, dt, node, config) {
+                                let data = dt.row({ selected: true }).data();
+                                console.log(data);
                             },
                             enabled: false
                         },
@@ -289,7 +309,7 @@ $(document).ready(function () {
                         value: "-"
                     });
                 }
-                
+
                 if ($("#input_uji_nondahak").val() != "Bukan MTB") {
                     df.push({
                         name: "input_nama_nonmtb",

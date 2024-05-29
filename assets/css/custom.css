@@ -44,3 +44,8 @@ div.dataTables_length {
       max-width: 1200px !important;
     }
 }
+
+/* Use custom processing datatable */
+div.dataTables_processing div:last-child div {
+    display: none;
+}

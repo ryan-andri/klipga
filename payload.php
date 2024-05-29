@@ -16,7 +16,7 @@ switch ($cmd) {
             $result = $stmt->fetch();
             $indexed = [
                 htmlspecialchars($_POST['input_nama']),
-                htmlspecialchars($_POST['input_nama_panggilan']),
+                htmlspecialchars($_POST['input_panggilan']),
                 htmlspecialchars($_POST['input_nik']),
                 htmlspecialchars($_POST['input_bpjs']),
                 htmlspecialchars($_POST['input_alamat']),
@@ -45,7 +45,7 @@ switch ($cmd) {
 
             if ($result) {
                 if ($_POST["action"] == "update") {
-                    $query = "UPDATE data_pasien SET dp_nama=?, dp_panggilan=?, dp_nik=?, dp_bpjs=?, dp_alamat=?, dp_pekerjaan=?, dp_kelamin=?, dp_usia_subur=?, dp_tgl_lahir=?, dp_berat_badan=?, dp_tinggi_badan=?, dp_imun_bcg=?, dp_skor_tb_anak=?, dp_nohp=?, dp_petugas_kes=?, dp_tgl_input=? WHERE id=" . $_POST['dp_id'];
+                    $query = "UPDATE data_pasien SET dp_nama=?, dp_panggilan=?, dp_nik=?, dp_bpjs=?, dp_alamat=?, dp_pekerjaan=?, dp_kelamin=?, dp_usia_subur=?, dp_tgl_lahir=?, dp_berat_badan=?, dp_tinggi_badan=?, dp_imun_bcg=?, dp_skor_tb_anak=?, dp_nohp=?, dp_petugas_kes=?, dp_uji_tbc=?, dp_date_toraks=?, dp_toraks_seri=?, dp_toraks_kesan=?, dp_date_fnab=?, dp_hasil_fnab=?, dp_uji_nondahak=?, dp_nama_nonmtb=?, dp_tgl_input=? WHERE dp_id=" . $_POST['dp_id'];
                     $stmt = $db->prepare($query);
                     $res = $stmt->execute($indexed);
                     if ($res) {
@@ -110,7 +110,7 @@ switch ($cmd) {
             $searchValue = $_POST['search']['value'];
             $filter_date = $_POST['filter_date'];
 
-            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien WHERE dp_status=1");
+            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien WHERE data_pasien.dp_status=1 ");
             $stmt->execute();
             $records = $stmt->fetch();
             $totalRecords = $records['allcount'];
@@ -136,7 +136,7 @@ switch ($cmd) {
                 );
             }
 
-            $final_filter = " 1 AND dp_status=1 " . $date_filter . $searchQuery;
+            $final_filter = " 1 AND data_pasien.dp_status=1 " . $date_filter . $searchQuery;
 
             // usleep(200000);
 
@@ -147,9 +147,11 @@ switch ($cmd) {
 
             usleep(400000);
 
-            $stmt = $db->prepare("SELECT * FROM data_pasien WHERE "
-                . $final_filter . " ORDER BY " . $columnName . " "
-                . $columnSortOrder . " LIMIT :limit,:offset");
+            $fields = "SELECT data_pasien.dp_id, data_pasien.dp_nama, data_pasien.dp_panggilan, data_pasien.dp_nik, data_pasien.dp_bpjs, data_pasien.dp_alamat, data_pasien.dp_pekerjaan, data_pasien.dp_kelamin, data_pasien.dp_usia_subur, data_pasien.dp_tgl_lahir, data_pasien.dp_berat_badan, data_pasien.dp_tinggi_badan, data_pasien.dp_imun_bcg, data_pasien.dp_skor_tb_anak, data_pasien.dp_nohp, data_pasien.dp_petugas_kes, data_pasien.dp_uji_tbc, data_pasien.dp_date_toraks, data_pasien.dp_toraks_seri, data_pasien.dp_toraks_kesan, data_pasien.dp_date_fnab, data_pasien.dp_hasil_fnab, data_pasien.dp_uji_nondahak, data_pasien.dp_nama_nonmtb, data_pasien.dp_tgl_input, data_pasien.dp_status, data_pmo.pmo_id, data_pmo.dp_id as pmo_dp_id, data_pmo.pmo_nama, data_pmo.pmo_alamat, data_pmo.pmo_fasyankes, data_pmo.pmo_kota, data_pmo.pmo_tbc3_faskes, data_pmo.pmo_tahun, data_pmo.pmo_provinsi, data_pmo.pmo_tbc3_kota, data_pmo.pmo_telpon FROM data_pasien ";
+            $join = " JOIN data_pmo ON data_pasien.dp_id = data_pmo.dp_id WHERE ";
+
+            $stmt = $db->prepare($fields . $join . $final_filter
+                . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
 
             foreach ($searchArray as $key => $search) {
                 $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
@@ -179,7 +181,27 @@ switch ($cmd) {
                     'dp_skor_tb_anak' => $row['dp_skor_tb_anak'],
                     'dp_nohp' => $row['dp_nohp'],
                     'dp_petugas_kes' => $row['dp_petugas_kes'],
-                    'dp_tgl_input' => $row['dp_tgl_input']
+                    'dp_uji_tbc' => $row['dp_uji_tbc'],
+                    'dp_date_toraks' => $row['dp_date_toraks'],
+                    'dp_toraks_seri' => $row['dp_toraks_seri'],
+                    'dp_toraks_kesan' => $row['dp_toraks_kesan'],
+                    'dp_date_fnab' => $row['dp_date_fnab'],
+                    'dp_hasil_fnab' => $row['dp_hasil_fnab'],
+                    'dp_uji_nondahak' => $row['dp_uji_nondahak'],
+                    'dp_nama_nonmtb' => $row['dp_nama_nonmtb'],
+                    'dp_tgl_input' => $row['dp_tgl_input'],
+                    'dp_status' => $row['dp_status'],
+                    'pmo_id' => $row['pmo_id'],
+                    'pmo_dp_id' => $row['pmo_dp_id'],
+                    'pmo_nama' => $row['pmo_nama'],
+                    'pmo_alamat' => $row['pmo_alamat'],
+                    'pmo_fasyankes' => $row['pmo_fasyankes'],
+                    'pmo_kota' => $row['pmo_kota'],
+                    'pmo_tbc3_faskes' => $row['pmo_tbc3_faskes'],
+                    'pmo_tahun' => $row['pmo_tahun'],
+                    'pmo_provinsi' => $row['pmo_provinsi'],
+                    'pmo_tbc3_kota' => $row['pmo_tbc3_kota'],
+                    'pmo_telpon' => $row['pmo_telpon']
                 );
             }
 
