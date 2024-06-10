@@ -50,8 +50,8 @@ require('configs/config.php');
                                     <label for="input_nama">Nama Pasien TBC</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input class="form-control" id="input_nama_panggilan" type="text" name="input_nama_panggilan" placeholder="Nama Lengkap" />
-                                    <label for="input_nama_panggilan">Nama Panggilan</label>
+                                    <input class="form-control" id="input_panggilan" type="text" name="input_panggilan" placeholder="Nama Panggilan" />
+                                    <label for="input_panggilan">Nama Panggilan</label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input class="form-control" id="input_nik" type="text" name="input_nik" placeholder="NIK" />
@@ -148,6 +148,64 @@ require('configs/config.php');
                                     <label for="input_petugas_kes">Petugas Kesehatan</label>
                                 </div>
                             </div>
+
+                            <!-- DATA LAINNYA -->
+                            <div class="d-flex justify-content-center">
+                                <div class="text-center mb-2 p-2">
+                                    <div class="text-sm"><strong>* DATA PEMERIKSAAN LAIN - LAIN *</strong></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="input_uji_tbc" class="form-control" id="input_uji_tbc" placeholder="Uji Tuberkulin">
+                                    <label for="input_uji_tbc">Uji Tuberkulin - mm (Indurasi Bukan eritema))</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="date" name="input_date_toraks" class="form-control" id="input_date_toraks" placeholder="Tanggal Foto Toraks">
+                                            <label for="input_date_toraks">Tanggal Foto Toraks</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="input_toraks_seri" class="form-control" id="input_toraks_seri" placeholder="No. Seri Foto toraks">
+                                            <label for="input_toraks_seri">No. Seri Foto Toraks</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="input_toraks_kesan" class="form-control" id="input_toraks_kesan" placeholder="Kesan Foto Toraks">
+                                    <label for="input_toraks_kesan">Kesan Foto Toraks</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="date" name="input_date_fnab" class="form-control" id="input_date_fnab" placeholder="Tanggal Biopsi Jarum halus (FNAB)">
+                                            <label for="input_date_fnab">Tanggal Biopsi Jarum halus (FNAB)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="input_hasil_fnab" class="form-control" id="input_hasil_fnab" placeholder="Biopsi Jarum halus (FNAB)">
+                                            <label for="input_hasil_fnab">Hasil Biopsi Jarum halus (FNAB)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <select name="input_uji_nondahak" class="form-select" id="input_uji_nondahak" placeholder="Hasil Contoh Uji selain dahak">
+                                        <option value="MTB" selected>MTB</option>
+                                        <option value="Bukan MTB">Bukan MTB</option>
+                                    </select>
+                                    <label for="input_uji_nondahak">Hasil Contoh Uji selain dahak</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="input_nama_nonmtb" class="form-control" id="input_nama_nonmtb" placeholder="Jika Bukan MTB, sebutkan">
+                                    <label for="input_nama_nonmtb">Jika Bukan MTB, sebutkan</label>
+                                </div>
+                            </div>
                             <!-- DATA PMO -->
                             <div class="d-flex justify-content-center">
                                 <div class="text-center form-control bg-dark mb-3 p-2">
@@ -218,6 +276,15 @@ require('configs/config.php');
 
     <script>
         $(document).ready(function() {
+            $("#input_nama_nonmtb").val("-");
+            $("#input_nama_nonmtb").prop('disabled', true);
+            $("#input_pmo_tbc3_fasyankes").val("04");
+            $("#input_pmo_tbc3_fasyankes").prop('readonly', true);
+            $("#input_pmo_tbc3_fasyankes").addClass("disabled");
+            $("#input_pmo_tbc3_kota").val("05");
+            $("#input_pmo_tbc3_kota").prop('readonly', true);
+            $("#input_pmo_tbc3_kota").addClass("disabled");
+
             $("#input_tgl_lahir").on("change", function() {
                 date = getAge($("#input_tgl_lahir").val());
                 $("#input_umur").val(date[0]);
@@ -231,9 +298,6 @@ require('configs/config.php');
                 switch (input) {
                     case "pasien":
                         ele = "#form_pasien input, #form_pasien select";
-                        break;
-                    case "skd":
-                        ele = "#form_skd input, #form_skd select";
                         break;
                 }
 
@@ -259,6 +323,16 @@ require('configs/config.php');
                 }
             });
 
+            $("#input_uji_nondahak").on("change", function() {
+                if ($(this).val() == "Bukan MTB") {
+                    $("#input_nama_nonmtb").val("");
+                    $("#input_nama_nonmtb").prop('disabled', false);
+                } else {
+                    $("#input_nama_nonmtb").val("-");
+                    $("#input_nama_nonmtb").prop('disabled', true);
+                }
+            });
+
             $("#simpan_pasien").on("click", function() {
                 if (!validation("pasien")) {
                     alert("Bagian form tidak boleh ada yang kosong.");
@@ -279,14 +353,21 @@ require('configs/config.php');
                     });
                 }
 
+                if ($("#input_uji_nondahak").val() != "Bukan MTB") {
+                    df.push({
+                        name: "input_nama_nonmtb",
+                        value: "-"
+                    });
+                }
+
                 // lock button before send data
-                $(this).text("Menyimpan Data ...").addClass("disabled");
+                $("#simpan_pasien").text("Menyimpan Data ...").addClass("disabled");
 
                 $.ajax({
                     url: "payload.php",
                     type: "POST",
                     dataType: "json",
-                    data: "action=insert" + "&" + "id=1" + "&" + $.param(df),
+                    data: "action=insert&" + $.param(df),
                     complete: function() {
                         $("#simpan_pasien").text("Simpan").removeClass("disabled");
                     },

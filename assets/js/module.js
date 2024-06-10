@@ -1,44 +1,35 @@
 $(document).ready(function () {
+    var today = new Date().toISOString().split("T")[0];
+
     // default
     $("#content").load("menu/mod_dashboard.html", function () {
-        $("#loading").removeClass("d-none");
-
         get_data_dashboard();
-
-        const datatablesSimple = document.getElementById('datatablesSimple');
-        if (datatablesSimple) {
-            new DataTable(datatablesSimple);
-        }
     });
 
     // Per modules
     // -----------
     $("#nav_dashboard").on("click", function () {
         $("#content").load("menu/mod_dashboard.html", function () {
-            $("#loading").removeClass("d-none");
-
             get_data_dashboard();
-
-            const datatablesSimple = document.getElementById('datatablesSimple');
-            if (datatablesSimple) {
-                new DataTable(datatablesSimple);
-            }
         });
     });
 
     function get_data_dashboard() {
+        $("#loading").removeClass("d-none");
+
         $.ajax({
             url: "payload.php",
             type: "POST",
             dataType: "json",
             data: {
                 action: "dashboard",
-                today: today = new Date().toISOString().split("T")[0]
+                today: today = today
             },
             success: function (response) {
                 switch (response.status) {
                     case "success":
-                        $("#total_records").text(response.allrecords + " orang");
+                        $("#record_sudah").text(response.record_sudah + " orang");
+                        $("#record_belum").text(response.record_belum + " orang");
                         $("#today_record").text(response.todayrecords + " orang");
                         break;
                     case "failed":
@@ -55,11 +46,15 @@ $(document).ready(function () {
                 $("#loading").addClass("d-none");
             }
         });
+
+        const datatablesSimple = document.getElementById('datatablesSimple');
+        if (datatablesSimple) {
+            new DataTable(datatablesSimple);
+        }
     }
 
     $("#nav_data_pasien").on("click", function () {
         $("#content").load("menu/mod_data_pasien.html", function () {
-            var today = new Date().toISOString().split("T")[0];
             var tabel_pasien = "";
 
             $("#input_tgl_filter").val(today);
@@ -99,14 +94,27 @@ $(document).ready(function () {
                         {
                             text: "Tambah Data",
                             action: function (e, dt, node, config) {
+                                $("#tambahPasien").text("Form Tambah Data Pasien");
                                 $("#simpan_pasien").text("Simpan").removeClass("disabled");
                                 $("#form_pasien")[0].reset();
                                 $("#input_nama_nonmtb").val("-");
                                 $("#input_nama_nonmtb").prop('disabled', true);
-                                $("#modal_pasien").modal("show");
+
                                 // hidden value
                                 $("#hid").val("1");
                                 $("#action").val("insert");
+                                $("#input_tgl_input").val(today);
+
+                                // force disabled
+                                $("#input_pmo_tbc3_fasyankes").val("04");
+                                $("#input_pmo_tbc3_fasyankes").prop('readonly', true);
+                                $("#input_pmo_tbc3_fasyankes").addClass("disabled");
+                                $("#input_pmo_tbc3_kota").val("05");
+                                $("#input_pmo_tbc3_kota").prop('readonly', true);
+                                $("#input_pmo_tbc3_kota").addClass("disabled");
+
+                                // show modal
+                                $("#modal_pasien").modal("show");
                             },
                             enabled: true
                         },
@@ -115,10 +123,15 @@ $(document).ready(function () {
                             action: function (e, dt, node, config) {
                                 let data = dt.row({ selected: true }).data();
 
+                                $("#tambahPasien").text("Form Edit Data Pasien");
+                                $("#simpan_pasien").text("Update").removeClass("disabled");
+
                                 $("#form_pasien")[0].reset();
+
                                 // hidden value
                                 $("#hid").val(data.dp_id.toString());
                                 $("#action").val("update");
+
                                 // init value
                                 $("#input_nama").val(data.dp_nama.toString());
                                 $("#input_panggilan").val(data.dp_panggilan.toString());
@@ -147,8 +160,26 @@ $(document).ready(function () {
                                 $("#input_uji_nondahak").val(data.dp_uji_nondahak.toString());
                                 $("#input_nama_nonmtb").val(data.dp_nama_nonmtb.toString());
                                 $("#input_nama_nonmtb").prop('disabled', (data.dp_uji_nondahak.toString() == "MTB"));
-                                $("#input_tgl_input").val(data.dp_tgl_input);
-                                
+                                $("#input_tgl_input").val(data.dp_tgl_input.toString());
+                                // init pmo
+                                $("#input_pmo_nama").val(data.pmo_nama.toString());
+                                $("#input_pmo_alamat").val(data.pmo_alamat.toString());
+                                $("#input_pmo_fasyankes").val(data.pmo_fasyankes.toString());
+                                $("#input_pmo_kota").val(data.pmo_kota.toString());
+                                $("#input_pmo_tbc3_fasyankes").val(data.pmo_tbc3_faskes.toString());
+                                $("#input_pmo_tahun").val(data.pmo_tahun);
+                                $("#input_pmo_provinsi").val(data.pmo_provinsi.toString());
+                                $("#input_pmo_tbc3_kota").val(data.pmo_tbc3_kota.toString());
+                                $("#input_pmo_telp").val(data.pmo_telpon.toString());
+
+                                // force disabled
+                                $("#input_pmo_tbc3_fasyankes").prop('readonly', true);
+                                $("#input_pmo_tbc3_fasyankes").addClass("disabled");
+                                $("#input_pmo_tbc3_kota").prop('readonly', true);
+                                $("#input_pmo_tbc3_kota").addClass("disabled");
+
+                                console.log(data.dp_tgl_input.toString());
+
                                 $("#modal_pasien").modal("show");
                             },
                             enabled: false
@@ -165,40 +196,22 @@ $(document).ready(function () {
                             text: "Input Data Pasien",
                             action: function (e, dt, node, config) {
                                 let data = dt.row({ selected: true }).data();
-                                $("#form_skd")[0].reset();
+                                $("#form_input_pasien")[0].reset();
+
                                 // hidden value
-                                $("#skd_hid").val(data.id.toString());
-                                // init Value
-                                $("#skd_tgl_daftar").val(data.tanggal_daftar.toString());
-                                $("#skd_tgl_daftar").prop("readonly", true);
-                                $("#skd_tgl_daftar").addClass("disabled");
-                                $("#skd_nama").val(data.nama.toString());
-                                $("#skd_nama").prop("readonly", true);
-                                $("#skd_nama").addClass("disabled");
-                                $("#skd_tempat_lahir").val(data.tempat_lahir.toString());
-                                $("#skd_tempat_lahir").prop("readonly", true);
-                                $("#skd_tempat_lahir").addClass("disabled");
-                                $("#skd_tgl_lahir").val(data.tanggal_lahir.toString());
-                                $("#skd_tgl_lahir").prop("readonly", true);
-                                $("#skd_tgl_lahir").addClass("disabled");
-                                $("#skd_nohp").val(data.nohp.toString());
-                                $("#skd_nohp").prop("readonly", true);
-                                $("#skd_nohp").addClass("disabled");
+                                $("#hid_pasien").val(data.dp_id.toString());
+                                $("#action_input").val("input_pasien");
 
-                                $("#skd_bmi").prop("readonly", true);
-                                $("#skd_bmi").addClass("disabled");
+                                $("#ro_input_nama").val(data.dp_nama.toString());
+                                $("#ro_input_panggilan").val(data.dp_panggilan.toString());
+                                $("#ro_input_nik").val(data.dp_nik.toString());
+                                $("#ro_input_bpjs").val(data.dp_bpjs.toString());
+                                $("#ro_input_nama").prop("readonly", true);
+                                $("#ro_input_panggilan").prop("readonly", true);
+                                $("#ro_input_nik").prop("readonly", true);
+                                $("#ro_input_bpjs").prop("readonly", true);
 
-                                if (data.pembayaran_skd == 0) {
-                                    $("#mask_status").removeClass("d-none");
-                                    $("#mask_status").addClass("d-block");
-                                    $("#simpan_skd").prop("disabled", true);
-                                } else {
-                                    $("#mask_status").removeClass("d-block");
-                                    $("#mask_status").addClass("d-none");
-                                    $("#simpan_skd").prop("disabled", false);
-                                }
-
-                                mod_skd();
+                                module_input_pasien();
                             },
                             enabled: false
                         },
@@ -276,6 +289,9 @@ $(document).ready(function () {
                     case "pasien":
                         ele = "#form_pasien input, #form_pasien select";
                         break;
+                    case "pasien_lanjutan":
+                        ele = "#form_input_pasien input, #form_input_pasien select";
+                        break;
                     case "skd":
                         ele = "#form_skd input, #form_skd select";
                         break;
@@ -300,7 +316,6 @@ $(document).ready(function () {
                 }
 
                 let df = $("#form_pasien").serializeArray();
-                df.push({ name: "input_tgl_input", value: today });
 
                 // force to - value (disabled element)
                 if ($("#input_kelamin").val() == "Laki-Laki") {
@@ -328,7 +343,7 @@ $(document).ready(function () {
                     type: "POST",
                     dataType: "json",
                     data: "action=" + action + "&"
-                        + "id=" + hid + "&"
+                        + "dp_id=" + hid + "&"
                         + $.param(df),
                     complete: function () {
                         $("#simpan_pasien").text("Simpan").removeClass("disabled");
@@ -378,6 +393,120 @@ $(document).ready(function () {
                 });
             });
 
+            function module_input_pasien() {
+                $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                $.ajax({
+                    url: "payload.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        action: "search_pasien",
+                        dp_id: $("#hid_pasien").val()
+                    },
+                    success: function (response) {
+                        if (response["status"]) {
+                            $("#input_tipe_diagnosis").val(response["result"]["dip_tipe_diagnosis"]);
+                            $("#input_klasifikasi_anatomi").val(response["result"]["dip_klasifikasi_anatomi"]);
+                            $("#input_ektraparu_lokasi").val(response["result"]["dip_ektraparu_lokasi"]);
+
+                            if (response["result"]["dip_klasifikasi_anatomi"] == "TBC Ekstraparu") {
+                                $("#input_ektraparu_lokasi").prop('disabled', false);
+                            } else {
+                                $("#input_ektraparu_lokasi").prop('disabled', true);
+                            }
+
+                            $("#input_klasifikasi_pengobatan_sebelumnya").val(response["result"]["dip_klasifikasi_pengobatan_sebelumnya"]);
+                            $("#input_klasifikasi_icd10").val(response["result"]["dip_klasifikasi_icd10"]);
+                            $("#input_klasifikasi_hiv").val(response["result"]["dip_klasifikasi_hiv"]);
+                            $("#input_dirujuk_oleh").val(response["result"]["dip_dirujuk_oleh"]);
+                            $("#input_dirujuk_oleh_isian").val(response["result"]["dip_dirujuk_oleh_isian"]);
+                            $("#input_pindahan_nama_fasyankes").val(response["result"]["dip_pindahan_nama_fasyankes"]);
+                            $("#input_pindahan_alamat_fasyankes").val(response["result"]["dip_pindahan_alamat_fasyankes"]);
+                            $("#input_pindahan_kota").val(response["result"]["dip_pindahan_kota"]);
+                            $("#input_pindahan_provinsi").val(response["result"]["dip_pindahan_provinsi"]);
+                            $("#input_investigasi_kontak").val(response["result"]["dip_investigasi_kontak"]);
+                            $("#input_jumlah_kontak_serumah").val(response["result"]["dip_jumlah_kontak_serumah"]);
+                            $("#input_jumlah_kontak_investigasi").val(response["result"]["dip_jumlah_kontak_investigasi"]);
+                            $("#input_jumlah_kontak_tbc").val(response["result"]["dip_jumlah_kontak_tbc"]);
+                            $("#input_riwayat_dm").val(response["result"]["dip_riwayat_dm"]);
+                            $("#input_tes_dm").val(response["result"]["dip_tes_dm"]);
+                            $("#input_terapi_dm").val(response["result"]["dip_terapi_dm"]);
+                        }
+                    },
+                    complete: function (response) {
+                        $("#modal_input_pasien").modal("show");
+                    }
+                });
+            }
+
+            $("#simpan_input_pasien").on("click", function () {
+                if (!validation("pasien_lanjutan")) {
+                    alert("Bagian form tidak boleh ada yang kosong.");
+                    return;
+                }
+
+                let df = $("#form_input_pasien").serializeArray();
+
+                if ($("#input_klasifikasi_anatomi").val() == "TBC Paru") {
+                    df.push({
+                        name: "input_ektraparu_lokasi",
+                        value: "-"
+                    });
+                }
+
+                let action = $("#action_input").val().toString();
+                let hid = $("#hid_pasien").val().toString();
+
+                // lock button before send data
+                $("#simpan_input_pasien").text("Menyimpan Data ...").addClass("disabled");
+
+                $.ajax({
+                    url: "payload.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: "action=" + action + "&"
+                        + "dp_id=" + hid + "&"
+                        + $.param(df),
+                    complete: function () {
+                        $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                    },
+                    success: function (response) {
+                        switch (response) {
+                            case "success":
+                                $("#modal_input_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil disimpan!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "updated":
+                                $("#modal_input_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil diupdate!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "failed":
+                            case "error":
+                                swal({
+                                    text: "Data gagal disimpan!",
+                                    icon: "error",
+                                    button: false,
+                                });
+                                break;
+                        }
+                        tabel_pasien.ajax.reload(null, false);
+                        clearnbtn();
+                    }
+                });
+            });
+
             $("#input_tgl_lahir").on("change", function () {
                 var date = getAge($("#input_tgl_lahir").val());
                 $("#input_umur").val(date[0]);
@@ -401,6 +530,16 @@ $(document).ready(function () {
                 } else {
                     $("#input_nama_nonmtb").val("-");
                     $("#input_nama_nonmtb").prop('disabled', true);
+                }
+            });
+
+            $("#input_klasifikasi_anatomi").on("change", function () {
+                if ($(this).val() == "TBC Ekstraparu") {
+                    $("#input_ektraparu_lokasi").val("");
+                    $("#input_ektraparu_lokasi").prop('disabled', false);
+                } else {
+                    $("#input_ektraparu_lokasi").val("-");
+                    $("#input_ektraparu_lokasi").prop('disabled', true);
                 }
             });
 

@@ -6,11 +6,11 @@
 </div>
 <div class="mt-4 d-none" id="sub_content">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card bg-light text-dark mb-4">
-                <div class="card-header"><strong>Total Pasien</strong></div>
+                <div class="card-header"><strong>Data Pasien Sudah Input</strong></div>
                 <div class="card-body">
-                    <div id="total_records"></div>
+                    <div id="record_sudah"></div>
                 </div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
                     <!-- <a class="small text-dark stretched-link" href="#">View Details</a> -->
@@ -20,7 +20,21 @@
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <div class="card bg-light text-dark mb-4">
+                <div class="card-header"><strong>Data Pasien Belum Input</strong></div>
+                <div class="card-body">
+                    <div id="record_belum"></div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <!-- <a class="small text-dark stretched-link" href="#">View Details</a> -->
+                    <div class="small text-dark"><i class="fas fa-angle-right"></i></div>
+                    <div class="small text-dark"><i class="fas fa-angle-left"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
             <div class="card bg-light text-dark mb-4">
                 <div class="card-header"><strong>Jumlah Pasien Hari ini</strong></div>
                 <div class="card-body" id="today_record"></div>

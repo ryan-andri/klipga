@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2024 at 04:22 AM
+-- Generation Time: Jun 10, 2024 at 04:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,35 @@ SET time_zone = "+00:00";
 --
 -- Database: `db_klipga`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `data_input_pasien`
+--
+
+CREATE TABLE `data_input_pasien` (
+  `dip_id` int(20) NOT NULL,
+  `dip_dp_id` int(20) NOT NULL,
+  `dip_tipe_diagnosis` enum('Terkonfirmasi bakteriologis','Terdiagnosis klinis') NOT NULL,
+  `dip_klasifikasi_anatomi` enum('TBC Paru','TBC Ekstraparu') NOT NULL,
+  `dip_ektraparu_lokasi` varchar(255) NOT NULL DEFAULT '-',
+  `dip_klasifikasi_pengobatan_sebelumnya` enum('Baru','Diobati setelah gagal','Riwayat pengobatan sebelumnya tidak diketahui','kambuh','Diobati setelah putus berobat') NOT NULL,
+  `dip_klasifikasi_icd10` varchar(255) NOT NULL,
+  `dip_klasifikasi_hiv` enum('Positif','Negatif','Tidak diketahui') NOT NULL,
+  `dip_dirujuk_oleh` varchar(255) NOT NULL,
+  `dip_pindahan_nama_fasyankes` varchar(255) DEFAULT '-',
+  `dip_pindahan_alamat_fasyankes` varchar(255) DEFAULT '-',
+  `dip_pindahan_kota` varchar(255) DEFAULT '-',
+  `dip_pindahan_provinsi` varchar(255) DEFAULT '-',
+  `dip_investigasi_kontak` enum('Ya','Tidak') NOT NULL,
+  `dip_jumlah_kontak_serumah` varchar(255) NOT NULL DEFAULT '-',
+  `dip_jumlah_kontak_investigasi` varchar(255) NOT NULL DEFAULT '-',
+  `dip_jumlah_kontak_tbc` varchar(255) NOT NULL DEFAULT '-',
+  `dip_riwayat_dm` enum('Ya','Tidak') NOT NULL,
+  `dip_tes_dm` enum('Positif','Negatif') NOT NULL,
+  `dip_terapi_dm` enum('OHO','Insulin') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -78,10 +107,10 @@ CREATE TABLE `data_pmo` (
   `pmo_alamat` text NOT NULL,
   `pmo_fasyankes` varchar(255) NOT NULL,
   `pmo_kota` varchar(255) NOT NULL,
-  `pmo_tbc3_faskes` varchar(255) NOT NULL,
+  `pmo_tbc3_faskes` varchar(5) NOT NULL DEFAULT '04',
   `pmo_tahun` year(4) NOT NULL,
   `pmo_provinsi` varchar(255) NOT NULL,
-  `pmo_tbc3_kota` varchar(255) NOT NULL,
+  `pmo_tbc3_kota` varchar(5) NOT NULL DEFAULT '05',
   `pmo_telpon` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -90,13 +119,19 @@ CREATE TABLE `data_pmo` (
 --
 
 INSERT INTO `data_pmo` (`pmo_id`, `dp_id`, `pmo_nama`, `pmo_alamat`, `pmo_fasyankes`, `pmo_kota`, `pmo_tbc3_faskes`, `pmo_tahun`, `pmo_provinsi`, `pmo_tbc3_kota`, `pmo_telpon`) VALUES
-(1, 1, 'Testing PMO', '123456789', 'Testing Alamat', 'Testing Faskes', 'Testing Kota', '0000', '2000', 'Sumsel', '123/VM/XX/123'),
-(2, 2, 'Testing PMO', '4433', 'Testing Alamat', 'Testing Faskes', 'Palembang', '0000', '2004', 'Sumsel', '123/VM/XX/123'),
-(3, 3, 'Testing', 'Testing Alamat PMO', 'Testing Fasyankes', 'Testing Kota PMO', 'TestingRegTBFaskyankes', '2021', 'Testing Provinsi', 'TestingRegTBKota', '12341231321');
+(1, 1, 'Testing PMO', 'PMO Alamat', 'UUwee', 'Testing Kota', 'Data ', '2020', 'Jakarda', 'Data ', '12345'),
+(2, 2, 'Testing PMO', 'Jalan', 'Fasyankes', 'Kota', 'Test1', '2024', 'Sumsel', 'Test1', 'Sumsel'),
+(3, 3, 'Testing', 'Testing Alamat PMO', 'Testing Fasyankes', 'Testing Kota PMO', 'Testi', '2024', 'Testing Provinsi', 'Testi', '12341231321');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `data_input_pasien`
+--
+ALTER TABLE `data_input_pasien`
+  ADD PRIMARY KEY (`dip_id`);
 
 --
 -- Indexes for table `data_pasien`
@@ -115,16 +150,22 @@ ALTER TABLE `data_pmo`
 --
 
 --
+-- AUTO_INCREMENT for table `data_input_pasien`
+--
+ALTER TABLE `data_input_pasien`
+  MODIFY `dip_id` int(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `data_pasien`
 --
 ALTER TABLE `data_pasien`
-  MODIFY `dp_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `dp_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `data_pmo`
 --
 ALTER TABLE `data_pmo`
-  MODIFY `pmo_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `pmo_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

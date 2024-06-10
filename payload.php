@@ -51,19 +51,17 @@ switch ($cmd) {
                     if ($res) {
                         $dt_pmo = [
                             htmlspecialchars($_POST['input_pmo_nama']),
-                            htmlspecialchars($_POST['input_pmo_telp']),
                             htmlspecialchars($_POST['input_pmo_alamat']),
                             htmlspecialchars($_POST['input_pmo_fasyankes']),
                             htmlspecialchars($_POST['input_pmo_kota']),
-                            htmlspecialchars($_POST['input_pmo_tbc3_fasyankes']),
                             htmlspecialchars($_POST['input_pmo_tahun']),
                             htmlspecialchars($_POST['input_pmo_provinsi']),
-                            htmlspecialchars($_POST['input_pmo_tbc3_kota'])
+                            htmlspecialchars($_POST['input_pmo_telp'])
                         ];
-                        $query = "UPDATE data_pmo SET pmo_nama=?, pmo_alamat=?, pmo_fasyankes=?, pmo_kota=?, pmo_tbc3_faskes=?, pmo_tahun=?, pmo_provinsi=?, pmo_tbc3_kota=?, pmo_telpon=? WHERE pmo_id=" . $_POST['pmo_id'];
+                        $query = "UPDATE data_pmo SET pmo_nama=?, pmo_alamat=?, pmo_fasyankes=?, pmo_kota=?, pmo_tahun=?, pmo_provinsi=?, pmo_telpon=? WHERE dp_id=" . $_POST['dp_id'];
                         $stmt = $db->prepare($query);
                         $pmo = $stmt->execute($dt_pmo);
-                        echo json_encode($pmo ? "success" : "failed");
+                        echo json_encode($pmo ? "updated" : "failed");
                     } else {
                         echo json_encode("failed");
                     }
@@ -81,13 +79,11 @@ switch ($cmd) {
                         htmlspecialchars($_POST['input_pmo_alamat']),
                         htmlspecialchars($_POST['input_pmo_fasyankes']),
                         htmlspecialchars($_POST['input_pmo_kota']),
-                        htmlspecialchars($_POST['input_pmo_tbc3_fasyankes']),
                         htmlspecialchars($_POST['input_pmo_tahun']),
                         htmlspecialchars($_POST['input_pmo_provinsi']),
-                        htmlspecialchars($_POST['input_pmo_tbc3_kota']),
                         htmlspecialchars($_POST['input_pmo_telp'])
                     ];
-                    $query = "INSERT INTO data_pmo (dp_id, pmo_nama, pmo_alamat, pmo_fasyankes, pmo_kota, pmo_tbc3_faskes, pmo_tahun, pmo_provinsi, pmo_tbc3_kota, pmo_telpon) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                    $query = "INSERT INTO data_pmo (dp_id, pmo_nama, pmo_alamat, pmo_fasyankes, pmo_kota, pmo_tahun, pmo_provinsi, pmo_telpon) VALUES (?,?,?,?,?,?,?,?)";
                     $stmt = $db->prepare($query);
                     $pmo = $stmt->execute($dt_pmo);
                     echo json_encode($pmo ? "success" : "failed");
@@ -222,27 +218,102 @@ switch ($cmd) {
             ));
         }
         break;
+    case 'input_pasien':
+    case 'search_pasien':
+        try {
+            $query = "SELECT * FROM data_input_pasien WHERE dip_dp_id ='" . $_POST['dp_id'] . "'";
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch();
+
+            if ($cmd == "input_pasien") {
+                $indexed = [
+                    htmlspecialchars($_POST['dp_id']),
+                    htmlspecialchars($_POST['input_tipe_diagnosis']),
+                    htmlspecialchars($_POST['input_klasifikasi_anatomi']),
+                    htmlspecialchars($_POST['input_ektraparu_lokasi']),
+                    htmlspecialchars($_POST['input_klasifikasi_pengobatan_sebelumnya']),
+                    htmlspecialchars($_POST['input_klasifikasi_icd10']),
+                    htmlspecialchars($_POST['input_klasifikasi_hiv']),
+                    htmlspecialchars($_POST['input_dirujuk_oleh']),
+                    htmlspecialchars($_POST['input_dirujuk_oleh_isian']),
+                    htmlspecialchars($_POST['input_pindahan_nama_fasyankes']),
+                    htmlspecialchars($_POST['input_pindahan_alamat_fasyankes']),
+                    htmlspecialchars($_POST['input_pindahan_kota']),
+                    htmlspecialchars($_POST['input_pindahan_provinsi']),
+                    htmlspecialchars($_POST['input_investigasi_kontak']),
+                    htmlspecialchars($_POST['input_jumlah_kontak_serumah']),
+                    htmlspecialchars($_POST['input_jumlah_kontak_investigasi']),
+                    htmlspecialchars($_POST['input_jumlah_kontak_tbc']),
+                    htmlspecialchars($_POST['input_riwayat_dm']),
+                    htmlspecialchars($_POST['input_tes_dm']),
+                    htmlspecialchars($_POST['input_terapi_dm'])
+                ];
+            }
+
+            if ($result) {
+                if ($cmd == "input_pasien") {
+                    sleep(1);
+                    $query = "UPDATE data_input_pasien SET dip_dp_id=?, dip_tipe_diagnosis=?, dip_klasifikasi_anatomi=?, dip_ektraparu_lokasi=?, dip_klasifikasi_pengobatan_sebelumnya=?, dip_klasifikasi_icd10=?, dip_klasifikasi_hiv=?, dip_dirujuk_oleh=?, dip_dirujuk_oleh_isian=?, dip_pindahan_nama_fasyankes=?, dip_pindahan_alamat_fasyankes=?, dip_pindahan_kota=?, dip_pindahan_provinsi=?, dip_investigasi_kontak=?, dip_jumlah_kontak_serumah=?, dip_jumlah_kontak_investigasi=?, dip_jumlah_kontak_tbc=?, dip_riwayat_dm=?, dip_tes_dm=?, dip_terapi_dm=? WHERE dip_dp_id=" . $_POST['dp_id'];
+                    $stmt = $db->prepare($query);
+                    $res = $stmt->execute($indexed);
+                    echo json_encode($res ? "updated" : "failed");
+                } else {
+                    echo json_encode(array(
+                        "status" => $result,
+                        "result" => $result ? $result : null
+                    ));
+                }
+            } else {
+                if ($cmd == "input_pasien") {
+                    sleep(1);
+                    $query = "INSERT INTO data_input_pasien (dip_dp_id, dip_tipe_diagnosis, dip_klasifikasi_anatomi, dip_ektraparu_lokasi, dip_klasifikasi_pengobatan_sebelumnya, dip_klasifikasi_icd10, dip_klasifikasi_hiv, dip_dirujuk_oleh, dip_dirujuk_oleh_isian, dip_pindahan_nama_fasyankes, dip_pindahan_alamat_fasyankes, dip_pindahan_kota, dip_pindahan_provinsi, dip_investigasi_kontak, dip_jumlah_kontak_serumah, dip_jumlah_kontak_investigasi, dip_jumlah_kontak_tbc, dip_riwayat_dm, dip_tes_dm, dip_terapi_dm) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    $stmt = $db->prepare($query);
+                    $res = $stmt->execute($indexed);
+                    echo json_encode($res ? "success" : "failed");
+                } else {
+                    echo json_encode(array(
+                        "status" => $result,
+                        "result" => $result ? $result : null
+                    ));
+                }
+            }
+        } catch (PDOException $e) {
+            echo json_encode("error");
+        }
+        break;
     case 'dashboard':
         try {
             $today = $_POST['today'];
-            $query = "SELECT COUNT(*) AS allrecords FROM data_pasien WHERE dp_status=1 ";
+            $query = "SELECT COUNT(*) AS record_sudah FROM data_pasien WHERE dp_status=1 ";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
             $records = $stmt->fetch();
-            $allrecords = $records['allrecords'];
+            $record_sudah = $records['record_sudah'];
 
-            sleep(1);
+            usleep(500000);
 
-            $stmt = $db->prepare($query . "AND dp_tgl_input = '" . $today . "'");
+            $query = "SELECT COUNT(*) AS record_belum FROM data_pasien LEFT JOIN data_input_pasien ON data_pasien.dp_id = data_input_pasien.dip_dp_id WHERE data_pasien.dp_status=1 AND data_input_pasien.dip_dp_id IS NULL";
+
+            $stmt = $db->prepare($query);
             $stmt->execute();
             $records = $stmt->fetch();
-            $todayrecords = $records['allrecords'];
+            $record_belum = $records['record_belum'];
+
+            usleep(500000);
+
+            $query = "SELECT COUNT(*) AS todayrecords FROM data_pasien WHERE dp_status=1 AND dp_tgl_input = '" . $today . "'";
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $records = $stmt->fetch();
+            $todayrecords = $records['todayrecords'];
 
             echo json_encode(
                 array(
                     "status" => "success",
-                    "allrecords" => $allrecords,
+                    "record_sudah" => $record_sudah,
+                    "record_belum" => $record_belum,
                     "todayrecords" => $todayrecords,
                     "messages" => ""
                 )
