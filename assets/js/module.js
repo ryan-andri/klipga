@@ -427,10 +427,39 @@ $(document).ready(function () {
                             $("#input_investigasi_kontak").val(response["result"]["dip_investigasi_kontak"]);
                             $("#input_jumlah_kontak_serumah").val(response["result"]["dip_jumlah_kontak_serumah"]);
                             $("#input_jumlah_kontak_investigasi").val(response["result"]["dip_jumlah_kontak_investigasi"]);
+
+                            if ($("#input_investigasi_kontak").val() == "Tidak") {
+                                $("#input_jumlah_kontak_serumah").prop("readonly", true);
+                                $("#input_jumlah_kontak_serumah").addClass("disabled");
+                                $("#input_jumlah_kontak_investigasi").prop("readonly", true);
+                                $("#input_jumlah_kontak_investigasi").addClass("disabled");
+                                $("#input_jumlah_kontak_tbc").prop("readonly", true);
+                                $("#input_jumlah_kontak_tbc").addClass("disabled");
+                            } else {
+                                $("#input_jumlah_kontak_serumah").prop("readonly", false);
+                                $("#input_jumlah_kontak_serumah").removeClass("disabled");
+                                $("#input_jumlah_kontak_investigasi").prop("readonly", false);
+                                $("#input_jumlah_kontak_investigasi").removeClass("disabled");
+                                $("#input_jumlah_kontak_tbc").prop("readonly", false);
+                                $("#input_jumlah_kontak_tbc").removeClass("disabled");
+                            }
+
                             $("#input_jumlah_kontak_tbc").val(response["result"]["dip_jumlah_kontak_tbc"]);
                             $("#input_riwayat_dm").val(response["result"]["dip_riwayat_dm"]);
                             $("#input_tes_dm").val(response["result"]["dip_tes_dm"]);
                             $("#input_terapi_dm").val(response["result"]["dip_terapi_dm"]);
+                        } else {
+                            if ($("#input_investigasi_kontak").val() == "Tidak") {
+                                $("#input_jumlah_kontak_serumah").val("-");
+                                $("#input_jumlah_kontak_serumah").prop("readonly", true);
+                                $("#input_jumlah_kontak_serumah").addClass("disabled");
+                                $("#input_jumlah_kontak_investigasi").val("-");
+                                $("#input_jumlah_kontak_investigasi").prop("readonly", true);
+                                $("#input_jumlah_kontak_investigasi").addClass("disabled");
+                                $("#input_jumlah_kontak_tbc").val("-");
+                                $("#input_jumlah_kontak_tbc").prop("readonly", true);
+                                $("#input_jumlah_kontak_tbc").addClass("disabled");
+                            }
                         }
                     },
                     complete: function (response) {
@@ -543,6 +572,30 @@ $(document).ready(function () {
                 }
             });
 
+            $("#input_investigasi_kontak").on("change", function () {
+                if ($(this).val() == "Tidak") {
+                    $("#input_jumlah_kontak_serumah").val("-");
+                    $("#input_jumlah_kontak_serumah").prop("readonly", true);
+                    $("#input_jumlah_kontak_serumah").addClass("disabled");
+                    $("#input_jumlah_kontak_investigasi").val("-");
+                    $("#input_jumlah_kontak_investigasi").prop("readonly", true);
+                    $("#input_jumlah_kontak_investigasi").addClass("disabled");
+                    $("#input_jumlah_kontak_tbc").val("-");
+                    $("#input_jumlah_kontak_tbc").prop("readonly", true);
+                    $("#input_jumlah_kontak_tbc").addClass("disabled");
+                } else {
+                    $("#input_jumlah_kontak_serumah").val("");
+                    $("#input_jumlah_kontak_serumah").prop("readonly", false);
+                    $("#input_jumlah_kontak_serumah").removeClass("disabled");
+                    $("#input_jumlah_kontak_investigasi").val("");
+                    $("#input_jumlah_kontak_investigasi").prop("readonly", false);
+                    $("#input_jumlah_kontak_investigasi").removeClass("disabled");
+                    $("#input_jumlah_kontak_tbc").val("");
+                    $("#input_jumlah_kontak_tbc").prop("readonly", false);
+                    $("#input_jumlah_kontak_tbc").removeClass("disabled");
+                }
+            });
+
             function getAge(date) {
                 if (date == "") return new Array("", "");
                 var now = new Date();
@@ -556,6 +609,328 @@ $(document).ready(function () {
                 }
                 return new Array(year + " Tahun", month + " Bulan");
             }
+        });
+    });
+
+    // nav yang belum di input
+    $("#nav_belum_input").on("click", function () {
+        $("#content").load("menu/mod_data_pasien_belum_input.html", function () {
+            var tabel_pasien = "";
+
+            $("#input_tgl_filter").val(today);
+
+            load_data(today);
+
+            function load_data(fdate) {
+                tabel_pasien = $("#tabel_pasien").DataTable({
+                    dom: "Bfrtip",
+                    order: [[0, "Asc"]],
+                    processing: true,
+                    serverSide: true,
+                    select: true,
+                    language: {
+                        processing: "<div class='spinner-border'></div>",
+                    },
+                    // stateSave: true,
+                    pageLength: 10,
+                    ajax: {
+                        url: "payload.php",
+                        type: "POST",
+                        dataType: "json",
+                        cache: false,
+                        data: {
+                            action: "load_pasien_belum_input",
+                            filter_date: fdate
+                        },
+                        complete: function () {
+                            clearnbtn();
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(error);
+                            clearnbtn();
+                        },
+                    },
+                    buttons: [
+                        {
+                            text: "Input Data Pasien",
+                            action: function (e, dt, node, config) {
+                                let data = dt.row({ selected: true }).data();
+                                $("#form_input_pasien")[0].reset();
+
+                                // hidden value
+                                $("#hid_pasien").val(data.dp_id.toString());
+                                $("#action_input").val("input_pasien");
+
+                                $("#ro_input_nama").val(data.dp_nama.toString());
+                                $("#ro_input_panggilan").val(data.dp_panggilan.toString());
+                                $("#ro_input_nik").val(data.dp_nik.toString());
+                                $("#ro_input_bpjs").val(data.dp_bpjs.toString());
+                                $("#ro_input_nama").prop("readonly", true);
+                                $("#ro_input_panggilan").prop("readonly", true);
+                                $("#ro_input_nik").prop("readonly", true);
+                                $("#ro_input_bpjs").prop("readonly", true);
+
+                                module_input_pasien();
+                            },
+                            enabled: false
+                        },
+                        {
+                            text: "Refresh",
+                            action: function (e, dt, node, config) {
+                                tabel_pasien.ajax.reload(null, false);
+                                clearnbtn();
+                            },
+                            enabled: true
+                        }
+                    ],
+                    columns: [
+                        {
+                            data: "dp_id",
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: "dp_nama",
+                            orderable: false
+                        },
+                        {
+                            data: "dp_nik",
+                            orderable: false
+                        },
+                        {
+                            data: "dp_tgl_lahir",
+                            orderable: false
+                        },
+                        {
+                            data: "dp_kelamin",
+                            orderable: false
+                        },
+                        {
+                            data: "dp_nohp",
+                            orderable: false
+                        },
+                        {
+                            data: "dp_tgl_input",
+                            orderable: false
+                        }
+                    ],
+                });
+            }
+
+            tabel_pasien.on("select deselect", function (e, dt, node, config) {
+                let selectedRows = tabel_pasien.rows({ selected: true }).count();
+                let res = dt.row({ selected: true }).data();
+                tabel_pasien.button(0).enable(selectedRows > 0);
+            });
+
+            function clearnbtn() {
+                tabel_pasien.button(0).enable(false);
+            }
+
+            $("#input_tgl_filter").on("change", function () {
+                tabel_pasien.clear();
+                tabel_pasien.destroy();
+                load_data($("#input_tgl_filter").val().toString());
+                // force draw after re-init
+                tabel_pasien.draw();
+            });
+
+            function validation(input) {
+                var valid = true;
+                var ele = "#form_input_pasien input, #form_input_pasien select";
+
+                $(ele).each(function () {
+                    if ($.trim($(this).val()).length == 0) {
+                        $(this).addClass("error");
+                        valid = false;
+                        $(this).focus();
+                    } else {
+                        $(this).removeClass("error");
+                    }
+                });
+                return valid;
+            }
+
+            function module_input_pasien() {
+                $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                $.ajax({
+                    url: "payload.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        action: "search_pasien",
+                        dp_id: $("#hid_pasien").val()
+                    },
+                    success: function (response) {
+                        if (response["status"]) {
+                            $("#input_tipe_diagnosis").val(response["result"]["dip_tipe_diagnosis"]);
+                            $("#input_klasifikasi_anatomi").val(response["result"]["dip_klasifikasi_anatomi"]);
+                            $("#input_ektraparu_lokasi").val(response["result"]["dip_ektraparu_lokasi"]);
+
+                            if (response["result"]["dip_klasifikasi_anatomi"] == "TBC Ekstraparu") {
+                                $("#input_ektraparu_lokasi").prop('disabled', false);
+                            } else {
+                                $("#input_ektraparu_lokasi").prop('disabled', true);
+                            }
+
+                            $("#input_klasifikasi_pengobatan_sebelumnya").val(response["result"]["dip_klasifikasi_pengobatan_sebelumnya"]);
+                            $("#input_klasifikasi_icd10").val(response["result"]["dip_klasifikasi_icd10"]);
+                            $("#input_klasifikasi_hiv").val(response["result"]["dip_klasifikasi_hiv"]);
+                            $("#input_dirujuk_oleh").val(response["result"]["dip_dirujuk_oleh"]);
+                            $("#input_dirujuk_oleh_isian").val(response["result"]["dip_dirujuk_oleh_isian"]);
+                            $("#input_pindahan_nama_fasyankes").val(response["result"]["dip_pindahan_nama_fasyankes"]);
+                            $("#input_pindahan_alamat_fasyankes").val(response["result"]["dip_pindahan_alamat_fasyankes"]);
+                            $("#input_pindahan_kota").val(response["result"]["dip_pindahan_kota"]);
+                            $("#input_pindahan_provinsi").val(response["result"]["dip_pindahan_provinsi"]);
+                            $("#input_investigasi_kontak").val(response["result"]["dip_investigasi_kontak"]);
+                            $("#input_jumlah_kontak_serumah").val(response["result"]["dip_jumlah_kontak_serumah"]);
+                            $("#input_jumlah_kontak_investigasi").val(response["result"]["dip_jumlah_kontak_investigasi"]);
+                            $("#input_jumlah_kontak_tbc").val(response["result"]["dip_jumlah_kontak_tbc"]);
+
+                            if ($("#input_investigasi_kontak").val() == "Tidak") {
+                                $("#input_jumlah_kontak_serumah").prop("readonly", true);
+                                $("#input_jumlah_kontak_serumah").addClass("disabled");
+                                $("#input_jumlah_kontak_investigasi").prop("readonly", true);
+                                $("#input_jumlah_kontak_investigasi").addClass("disabled");
+                                $("#input_jumlah_kontak_tbc").prop("readonly", true);
+                                $("#input_jumlah_kontak_tbc").addClass("disabled");
+                            } else {
+                                $("#input_jumlah_kontak_serumah").val("");
+                                $("#input_jumlah_kontak_serumah").prop("readonly", false);
+                                $("#input_jumlah_kontak_serumah").removeClass("disabled");
+                                $("#input_jumlah_kontak_investigasi").val("");
+                                $("#input_jumlah_kontak_investigasi").prop("readonly", false);
+                                $("#input_jumlah_kontak_investigasi").removeClass("disabled");
+                                $("#input_jumlah_kontak_tbc").val("");
+                                $("#input_jumlah_kontak_tbc").prop("readonly", false);
+                                $("#input_jumlah_kontak_tbc").removeClass("disabled");
+                            }
+
+                            $("#input_riwayat_dm").val(response["result"]["dip_riwayat_dm"]);
+                            $("#input_tes_dm").val(response["result"]["dip_tes_dm"]);
+                            $("#input_terapi_dm").val(response["result"]["dip_terapi_dm"]);
+                        } else {
+                            if ($("#input_investigasi_kontak").val() == "Tidak") {
+                                $("#input_jumlah_kontak_serumah").val("-");
+                                $("#input_jumlah_kontak_serumah").prop("readonly", true);
+                                $("#input_jumlah_kontak_serumah").addClass("disabled");
+                                $("#input_jumlah_kontak_investigasi").val("-");
+                                $("#input_jumlah_kontak_investigasi").prop("readonly", true);
+                                $("#input_jumlah_kontak_investigasi").addClass("disabled");
+                                $("#input_jumlah_kontak_tbc").val("-");
+                                $("#input_jumlah_kontak_tbc").prop("readonly", true);
+                                $("#input_jumlah_kontak_tbc").addClass("disabled");
+                            }
+                        }
+                    },
+                    complete: function (response) {
+                        $("#modal_input_pasien").modal("show");
+                    }
+                });
+            }
+
+            $("#simpan_input_pasien").on("click", function () {
+                if (!validation("pasien_lanjutan")) {
+                    alert("Bagian form tidak boleh ada yang kosong.");
+                    return;
+                }
+
+                let df = $("#form_input_pasien").serializeArray();
+
+                if ($("#input_klasifikasi_anatomi").val() == "TBC Paru") {
+                    df.push({
+                        name: "input_ektraparu_lokasi",
+                        value: "-"
+                    });
+                }
+
+                let action = $("#action_input").val().toString();
+                let hid = $("#hid_pasien").val().toString();
+
+                // lock button before send data
+                $("#simpan_input_pasien").text("Menyimpan Data ...").addClass("disabled");
+
+                $.ajax({
+                    url: "payload.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: "action=" + action + "&"
+                        + "dp_id=" + hid + "&"
+                        + $.param(df),
+                    complete: function () {
+                        $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                    },
+                    success: function (response) {
+                        switch (response) {
+                            case "success":
+                                $("#modal_input_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil disimpan!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "updated":
+                                $("#modal_input_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil diupdate!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "failed":
+                            case "error":
+                                swal({
+                                    text: "Data gagal disimpan!",
+                                    icon: "error",
+                                    button: false,
+                                });
+                                break;
+                        }
+                        tabel_pasien.ajax.reload(null, false);
+                        clearnbtn();
+                    }
+                });
+            });
+
+            $("#input_klasifikasi_anatomi").on("change", function () {
+                if ($(this).val() == "TBC Ekstraparu") {
+                    $("#input_ektraparu_lokasi").val("");
+                    $("#input_ektraparu_lokasi").prop('disabled', false);
+                } else {
+                    $("#input_ektraparu_lokasi").val("-");
+                    $("#input_ektraparu_lokasi").prop('disabled', true);
+                }
+            });
+
+            $("#input_investigasi_kontak").on("change", function () {
+                if ($(this).val() == "Tidak") {
+                    $("#input_jumlah_kontak_serumah").val("-");
+                    $("#input_jumlah_kontak_serumah").prop("readonly", true);
+                    $("#input_jumlah_kontak_serumah").addClass("disabled");
+                    $("#input_jumlah_kontak_investigasi").val("-");
+                    $("#input_jumlah_kontak_investigasi").prop("readonly", true);
+                    $("#input_jumlah_kontak_investigasi").addClass("disabled");
+                    $("#input_jumlah_kontak_tbc").val("-");
+                    $("#input_jumlah_kontak_tbc").prop("readonly", true);
+                    $("#input_jumlah_kontak_tbc").addClass("disabled");
+                } else {
+                    $("#input_jumlah_kontak_serumah").val("");
+                    $("#input_jumlah_kontak_serumah").prop("readonly", false);
+                    $("#input_jumlah_kontak_serumah").removeClass("disabled");
+                    $("#input_jumlah_kontak_investigasi").val("");
+                    $("#input_jumlah_kontak_investigasi").prop("readonly", false);
+                    $("#input_jumlah_kontak_investigasi").removeClass("disabled");
+                    $("#input_jumlah_kontak_tbc").val("");
+                    $("#input_jumlah_kontak_tbc").prop("readonly", false);
+                    $("#input_jumlah_kontak_tbc").removeClass("disabled");
+                }
+            });
         });
     });
 });

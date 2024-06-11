@@ -329,6 +329,114 @@ switch ($cmd) {
             );
         }
         break;
+    case 'load_pasien_belum_input':
+        try {
+            $draw = $_POST['draw'];
+            $rows = $_POST['start'];
+            $rowperpage = $_POST['length'];
+            $columnIndex = $_POST['order'][0]['column'];
+            $columnName = $_POST['columns'][$columnIndex]['data'];
+            $columnSortOrder = $_POST['order'][0]['dir'];
+            $searchValue = $_POST['search']['value'];
+            $filter_date = $_POST['filter_date'];
+
+            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien dp LEFT JOIN data_input_pasien dip ON dp.dp_id = dip.dip_dp_id WHERE dp.dp_status=1 AND dip.dip_dp_id IS NULL");
+            $stmt->execute();
+            $records = $stmt->fetch();
+            $totalRecords = $records['allcount'];
+
+            $date_filter = " ";
+            if (!empty($filter_date)) {
+                $date_filter = "AND dp.dp_tgl_input = '" . $filter_date . "' ";
+            }
+
+            $searchArray = array();
+            $searchQuery = " ";
+            if (!empty($searchValue)) {
+                $searchQuery = "AND (dp.dp_nama LIKE :dp_nama OR dp.dp_nik LIKE :dp_nik
+                        OR dp.dp_panggilan LIKE :dp_panggilan OR dp.dp_nohp LIKE :dp_nohp
+                        OR dp.dp_kelamin LIKE :dp_kelamin OR dp.dp_bpjs LIKE :dp_bpjs) ";
+                $searchArray = array(
+                    'dp_nama' => "%$searchValue%",
+                    'dp_nik' => "%$searchValue%",
+                    'dp_panggilan' => "%$searchValue%",
+                    'dp_nohp' => "%$searchValue%",
+                    'dp_kelamin' => "%$searchValue%",
+                    'dp_bpjs' => "%$searchValue%"
+                );
+            }
+
+            $final_filter = " dp.dp_status=1 AND dip.dip_dp_id IS NULL " . $date_filter . $searchQuery;
+
+            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien dp LEFT JOIN data_input_pasien dip ON dp.dp_id = dip.dip_dp_id WHERE" . $final_filter);
+            $stmt->execute($searchArray);
+            $records = $stmt->fetch();
+            $totalRecordwithFilter = $records['allcount'];
+
+            usleep(400000);
+
+            $fields = "SELECT dp.*, dip.* FROM data_pasien dp LEFT JOIN data_input_pasien dip ON dp.dp_id = dip.dip_dp_id WHERE ";
+            $stmt = $db->prepare($fields . $final_filter
+                . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+
+            foreach ($searchArray as $key => $search) {
+                $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
+            }
+
+            $stmt->bindValue(':limit', (int)$rows, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
+            $stmt->execute();
+            $res = $stmt->fetchAll();
+            $data = array();
+
+            foreach ($res as $row) {
+                $data[] = array(
+                    'dp_id' => $row['dp_id'],
+                    'dp_nama' => $row['dp_nama'],
+                    'dp_panggilan' => $row['dp_panggilan'],
+                    'dp_nik' => $row['dp_nik'],
+                    'dp_bpjs' => $row['dp_bpjs'],
+                    'dp_alamat' => $row['dp_alamat'],
+                    'dp_pekerjaan' => $row['dp_pekerjaan'],
+                    'dp_kelamin' => $row['dp_kelamin'],
+                    'dp_usia_subur' => $row['dp_usia_subur'],
+                    'dp_tgl_lahir' => $row['dp_tgl_lahir'],
+                    'dp_berat_badan' => $row['dp_berat_badan'],
+                    'dp_tinggi_badan' => $row['dp_tinggi_badan'],
+                    'dp_imun_bcg' => $row['dp_imun_bcg'],
+                    'dp_skor_tb_anak' => $row['dp_skor_tb_anak'],
+                    'dp_nohp' => $row['dp_nohp'],
+                    'dp_petugas_kes' => $row['dp_petugas_kes'],
+                    'dp_uji_tbc' => $row['dp_uji_tbc'],
+                    'dp_date_toraks' => $row['dp_date_toraks'],
+                    'dp_toraks_seri' => $row['dp_toraks_seri'],
+                    'dp_toraks_kesan' => $row['dp_toraks_kesan'],
+                    'dp_date_fnab' => $row['dp_date_fnab'],
+                    'dp_hasil_fnab' => $row['dp_hasil_fnab'],
+                    'dp_uji_nondahak' => $row['dp_uji_nondahak'],
+                    'dp_nama_nonmtb' => $row['dp_nama_nonmtb'],
+                    'dp_tgl_input' => $row['dp_tgl_input'],
+                    'dp_status' => $row['dp_status']
+                );
+            }
+
+            // usleep(200000);
+
+            echo json_encode(array(
+                "draw" => intval($draw),
+                "recordsTotal" => $totalRecords,
+                "recordsFiltered" => $totalRecordwithFilter,
+                "data" => $data
+            ));
+        } catch (PDOException $e) {
+            echo json_encode(array(
+                "draw" => 0,
+                "recordsTotal" => 0,
+                "recordsFiltered" => 0,
+                "data" => null
+            ));
+        }
+        break;
     default:
         break;
 }

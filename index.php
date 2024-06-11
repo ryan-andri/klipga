@@ -58,6 +58,10 @@ require('configs/config.php');
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Data Pasien
                         </a>
+                        <a class="nav-link" id="nav_belum_input">
+                            <div class="sb-nav-link-icon"><i class="fas fa-notes-medical"></i></div>
+                            Data belum input
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
