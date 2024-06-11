@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 10, 2024 at 04:27 AM
+-- Generation Time: Jun 11, 2024 at 11:01 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -37,6 +37,7 @@ CREATE TABLE `data_input_pasien` (
   `dip_klasifikasi_icd10` varchar(255) NOT NULL,
   `dip_klasifikasi_hiv` enum('Positif','Negatif','Tidak diketahui') NOT NULL,
   `dip_dirujuk_oleh` varchar(255) NOT NULL,
+  `dip_dirujuk_oleh_isian` varchar(255) NOT NULL,
   `dip_pindahan_nama_fasyankes` varchar(255) DEFAULT '-',
   `dip_pindahan_alamat_fasyankes` varchar(255) DEFAULT '-',
   `dip_pindahan_kota` varchar(255) DEFAULT '-',
@@ -49,6 +50,15 @@ CREATE TABLE `data_input_pasien` (
   `dip_tes_dm` enum('Positif','Negatif') NOT NULL,
   `dip_terapi_dm` enum('OHO','Insulin') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `data_input_pasien`
+--
+
+INSERT INTO `data_input_pasien` (`dip_id`, `dip_dp_id`, `dip_tipe_diagnosis`, `dip_klasifikasi_anatomi`, `dip_ektraparu_lokasi`, `dip_klasifikasi_pengobatan_sebelumnya`, `dip_klasifikasi_icd10`, `dip_klasifikasi_hiv`, `dip_dirujuk_oleh`, `dip_dirujuk_oleh_isian`, `dip_pindahan_nama_fasyankes`, `dip_pindahan_alamat_fasyankes`, `dip_pindahan_kota`, `dip_pindahan_provinsi`, `dip_investigasi_kontak`, `dip_jumlah_kontak_serumah`, `dip_jumlah_kontak_investigasi`, `dip_jumlah_kontak_tbc`, `dip_riwayat_dm`, `dip_tes_dm`, `dip_terapi_dm`) VALUES
+(3, 2, 'Terkonfirmasi bakteriologis', 'TBC Ekstraparu', 'Test', 'Baru', '10', 'Negatif', 'Kader/Komunitas', 'testing bro', 'Test', 'Test', 'Test', 'Test', 'Ya', '12', '12', '12', 'Ya', 'Positif', 'Insulin'),
+(4, 3, 'Terdiagnosis klinis', 'TBC Paru', '-', 'Baru', '15', 'Tidak diketahui', 'Fasyankes lainnya', 'Test Kader', '-', '-', '-', '-', 'Ya', '10', '18', '20', 'Ya', 'Positif', 'Insulin'),
+(8, 1, 'Terkonfirmasi bakteriologis', 'TBC Ekstraparu', 'Test', 'Diobati setelah gagal', '123', 'Negatif', 'Kader/Komunitas', 'Test', '-', '-', '-', '-', 'Tidak', '-', '-', '-', 'Ya', 'Positif', 'Insulin');
 
 -- --------------------------------------------------------
 
@@ -153,19 +163,19 @@ ALTER TABLE `data_pmo`
 -- AUTO_INCREMENT for table `data_input_pasien`
 --
 ALTER TABLE `data_input_pasien`
-  MODIFY `dip_id` int(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `dip_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `data_pasien`
 --
 ALTER TABLE `data_pasien`
-  MODIFY `dp_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `dp_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `data_pmo`
 --
 ALTER TABLE `data_pmo`
-  MODIFY `pmo_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `pmo_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
