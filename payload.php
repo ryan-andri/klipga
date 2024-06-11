@@ -10,7 +10,7 @@ switch ($cmd) {
     case 'insert':
     case 'update':
         try {
-            $query = "SELECT dp_nik, dp_tgl_input FROM data_pasien WHERE dp_nik ='" . $_POST['input_nik'] . "' AND dp_tgl_input = '" . $_POST['input_tgl_input'] . "'";
+            $query = "SELECT dp_nik, dp_tgl_input FROM data_pasien WHERE dp_nik ='" . $_POST['input_nik'] . "'";
             $stmt = $db->prepare($query);
             $stmt->execute();
             $result = $stmt->fetch();

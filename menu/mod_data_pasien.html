@@ -30,8 +30,12 @@
                             </div>
                             <input type="text" name="action" class="form-control" id="action" hidden>
                             <input type="text" name="hid" class="form-control" id="hid" hidden>
-                            <input type="date" name="input_tgl_input" class="form-control" id="input_tgl_input" hidden>
                             <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" id="input_tgl_input" type="date" name="input_tgl_input"
+                                        placeholder="Tanggal Input" />
+                                    <label for="input_tgl_input">Tanggal Input</label>
+                                </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" name="input_nama" class="form-control" id="input_nama"
                                         placeholder="Nama Pasien">
@@ -76,20 +80,22 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" id="input_tgl_lahir" type="date" name="input_tgl_lahir"
-                                        placeholder="Tanggal Lahir" />
-                                    <label for="input_tgl_lahir">Tanggal Lahir</label>
-                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="input_tgl_lahir" type="date"
+                                                name="input_tgl_lahir" placeholder="Tanggal Lahir" />
+                                            <label for="input_tgl_lahir">Tanggal Lahir</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
                                         <div class="form-floating mb-3">
                                             <input type="text" name="input_umur" class="form-control" id="input_umur"
                                                 placeholder="Umur" disabled>
                                             <label for="input_umur">Umur</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-floating mb-3">
                                             <input type="text" name="input_umur_bulan" class="form-control"
                                                 id="input_umur_bulan" placeholder="Bulan" disabled>
@@ -152,11 +158,10 @@
                                     <label for="input_petugas_kes">Petugas Kesehatan</label>
                                 </div>
                             </div>
-
                             <!-- DATA LAINNYA -->
                             <div class="d-flex justify-content-center">
-                                <div class="text-center mb-2 p-2">
-                                    <div class="text-sm"><strong>* DATA PEMERIKSAAN LAIN - LAIN *</strong></div>
+                                <div class="text-center form-control bg-dark mb-3 p-2">
+                                    <strong class="text-light">DATA PEMERIKSAAN LAIN - LAIN</strong>
                                 </div>
                             </div>
                             <div class="col-md-6">

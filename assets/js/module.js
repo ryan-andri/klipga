@@ -161,6 +161,7 @@ $(document).ready(function () {
                                 $("#input_nama_nonmtb").val(data.dp_nama_nonmtb.toString());
                                 $("#input_nama_nonmtb").prop('disabled', (data.dp_uji_nondahak.toString() == "MTB"));
                                 $("#input_tgl_input").val(data.dp_tgl_input.toString());
+
                                 // init pmo
                                 $("#input_pmo_nama").val(data.pmo_nama.toString());
                                 $("#input_pmo_alamat").val(data.pmo_alamat.toString());
