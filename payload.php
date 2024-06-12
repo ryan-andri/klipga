@@ -437,6 +437,35 @@ switch ($cmd) {
             ));
         }
         break;
+    case 'login':
+        $login_user = htmlspecialchars($_POST['user']);
+        $login_pass = htmlspecialchars($_POST['pass']);
+
+        $query = "SELECT * FROM data_user WHERE username_user=?";
+        $stmt = $db->prepare($query);
+        $stmt->execute([$login_user]);
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($res) {
+            $final = array();
+            foreach ($res as $data) {
+                $final = $data;
+            }
+            if (password_verify($login_pass, $final['password_user'])) {
+                $_SESSION['is_loged'] = true;
+                $_SESSION['role'] = $final['role_user'];
+                $_SESSION['user'] = $final['nama_user'];
+                $_SESSION['timeout'] = time();
+                $_SESSION['ip_addr'] = md5($_SERVER['REMOTE_ADDR']);
+                $_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);
+                echo json_encode("sukses");
+            } else {
+                echo json_encode("gagal");
+            }
+        } else {
+            echo json_encode("gagal");
+        }
+        break;
     default:
         break;
 }

@@ -18,7 +18,7 @@ $(document).ready(function () {
         $("#loading").removeClass("d-none");
 
         $.ajax({
-            url: "payload.php",
+            url: "../payload.php",
             type: "POST",
             dataType: "json",
             data: {
@@ -74,7 +74,7 @@ $(document).ready(function () {
                     // stateSave: true,
                     pageLength: 10,
                     ajax: {
-                        url: "payload.php",
+                        url: "../payload.php",
                         type: "POST",
                         dataType: "json",
                         cache: false,
@@ -340,7 +340,7 @@ $(document).ready(function () {
                 $("#simpan_pasien").text("Menyimpan Data ...").addClass("disabled");
 
                 $.ajax({
-                    url: "payload.php",
+                    url: "../payload.php",
                     type: "POST",
                     dataType: "json",
                     data: "action=" + action + "&"
@@ -397,7 +397,7 @@ $(document).ready(function () {
             function module_input_pasien() {
                 $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
                 $.ajax({
-                    url: "payload.php",
+                    url: "../payload.php",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -491,7 +491,7 @@ $(document).ready(function () {
                 $("#simpan_input_pasien").text("Menyimpan Data ...").addClass("disabled");
 
                 $.ajax({
-                    url: "payload.php",
+                    url: "../payload.php",
                     type: "POST",
                     dataType: "json",
                     data: "action=" + action + "&"
@@ -635,7 +635,7 @@ $(document).ready(function () {
                     // stateSave: true,
                     pageLength: 10,
                     ajax: {
-                        url: "payload.php",
+                        url: "../payload.php",
                         type: "POST",
                         dataType: "json",
                         cache: false,
@@ -756,7 +756,7 @@ $(document).ready(function () {
             function module_input_pasien() {
                 $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
                 $.ajax({
-                    url: "payload.php",
+                    url: "../payload.php",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -853,7 +853,7 @@ $(document).ready(function () {
                 $("#simpan_input_pasien").text("Menyimpan Data ...").addClass("disabled");
 
                 $.ajax({
-                    url: "payload.php",
+                    url: "../payload.php",
                     type: "POST",
                     dataType: "json",
                     data: "action=" + action + "&"
@@ -932,6 +932,19 @@ $(document).ready(function () {
                     $("#input_jumlah_kontak_tbc").removeClass("disabled");
                 }
             });
+        });
+    });
+
+    $("#logout").on("click", function (event) {
+        event.preventDefault();
+        swal({
+            title: "Anda Yakin ingin logout ?",
+            icon: "warning",
+            buttons: true
+        }).then((logout) => {
+            if (logout) {
+                window.location.replace('../logout.php');
+            }
         });
     });
 });
