@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 11, 2024 at 11:01 AM
+-- Generation Time: Jun 12, 2024 at 09:24 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -100,9 +100,10 @@ CREATE TABLE `data_pasien` (
 --
 
 INSERT INTO `data_pasien` (`dp_id`, `dp_nama`, `dp_panggilan`, `dp_nik`, `dp_bpjs`, `dp_alamat`, `dp_pekerjaan`, `dp_kelamin`, `dp_usia_subur`, `dp_tgl_lahir`, `dp_berat_badan`, `dp_tinggi_badan`, `dp_imun_bcg`, `dp_skor_tb_anak`, `dp_nohp`, `dp_petugas_kes`, `dp_uji_tbc`, `dp_date_toraks`, `dp_toraks_seri`, `dp_toraks_kesan`, `dp_date_fnab`, `dp_hasil_fnab`, `dp_uji_nondahak`, `dp_nama_nonmtb`, `dp_tgl_input`, `dp_status`) VALUES
-(1, 'Data Testing', 'Testing', '123456789', '1234', 'Jalan Testing', 'Testing', 'Perempuan', '-', '2024-05-28', 44, 168, 'Tidak Ada', '10', '123456789', 'Tidak', '22', '2024-05-28', '123/VM/XX/123', 'Testing', '2024-05-28', 'Testing', 'MTB', '-', '2024-05-28', 1),
+(1, 'Data Testing', 'Testing', '123456789', '1234', 'Jalan Testing', 'Testing', 'Perempuan', '-', '2024-05-28', 44, 168, 'Tidak Ada', '10', '123456789', 'Tidak', '22', '2024-05-28', '123/VM/XX/123', 'Testing', '2024-05-28', 'Testing', 'MTB', '-', '2024-06-11', 1),
 (2, 'Anggara', 'angga', '1231231231231', '1232132131', 'Test', 'Tes', 'Laki-Laki', '-', '2024-05-28', 60, 180, 'Ada', '80', '123123123123', 'Tidak', '22', '2024-05-28', '123/VM/XX/123', 'Testing', '2024-05-28', 'Testing', 'Bukan MTB', 'Testing', '2024-05-28', 1),
-(3, 'Budi', 'bud', '167101122003389', '123456789011', 'Testing', 'Testing', 'Laki-Laki', '-', '2024-05-28', 44, 165, 'Ada', '11', '11990092123218', 'Tidak', '24', '2024-05-28', 'Testing123', 'Testing', '2024-05-28', 'Testing', 'MTB', '-', '2024-05-28', 1);
+(3, 'Budi', 'bud', '167101122003389', '123456789011', 'Testing', 'Testing', 'Laki-Laki', '-', '2024-05-28', 44, 165, 'Ada', '11', '11990092123218', 'Tidak', '24', '2024-05-28', 'Testing123', 'Testing', '2024-05-28', 'Testing', 'MTB', '-', '2024-05-28', 1),
+(11, 'Yoga', 'Yoga', '12345', '123', 'Test', 'test', 'Laki-Laki', '-', '2005-06-11', 11, 11, 'Ada', '12', '1234', 'Tidak', '10', '2024-06-11', 'test', 'test', '2024-06-11', 'Test', 'Bukan MTB', 'Test', '2024-06-05', 1);
 
 -- --------------------------------------------------------
 
@@ -131,7 +132,30 @@ CREATE TABLE `data_pmo` (
 INSERT INTO `data_pmo` (`pmo_id`, `dp_id`, `pmo_nama`, `pmo_alamat`, `pmo_fasyankes`, `pmo_kota`, `pmo_tbc3_faskes`, `pmo_tahun`, `pmo_provinsi`, `pmo_tbc3_kota`, `pmo_telpon`) VALUES
 (1, 1, 'Testing PMO', 'PMO Alamat', 'UUwee', 'Testing Kota', 'Data ', '2020', 'Jakarda', 'Data ', '12345'),
 (2, 2, 'Testing PMO', 'Jalan', 'Fasyankes', 'Kota', 'Test1', '2024', 'Sumsel', 'Test1', 'Sumsel'),
-(3, 3, 'Testing', 'Testing Alamat PMO', 'Testing Fasyankes', 'Testing Kota PMO', 'Testi', '2024', 'Testing Provinsi', 'Testi', '12341231321');
+(3, 3, 'Testing', 'Testing Alamat PMO', 'Testing Fasyankes', 'Testing Kota PMO', 'Testi', '2024', 'Testing Provinsi', 'Testi', '12341231321'),
+(11, 11, 'Test', 'Test', 'Test', 'Test', '04', '2000', 'Test', '05', 'Test');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `data_user`
+--
+
+CREATE TABLE `data_user` (
+  `id_user` int(20) NOT NULL,
+  `nama_user` varchar(255) NOT NULL,
+  `username_user` varchar(255) NOT NULL,
+  `password_user` text NOT NULL,
+  `role_user` enum('user','admin') NOT NULL,
+  `status_user` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `data_user`
+--
+
+INSERT INTO `data_user` (`id_user`, `nama_user`, `username_user`, `password_user`, `role_user`, `status_user`) VALUES
+(1, 'Herlina, S.Kep., Ners', 'herlina', '$2y$10$cEOgb.xmry/Kraq4TtqsdO7wnwS4wC1hHQdevQn1iZYc/6LQUApTi', 'user', 1);
 
 --
 -- Indexes for dumped tables
@@ -156,6 +180,12 @@ ALTER TABLE `data_pmo`
   ADD PRIMARY KEY (`pmo_id`);
 
 --
+-- Indexes for table `data_user`
+--
+ALTER TABLE `data_user`
+  ADD PRIMARY KEY (`id_user`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -169,13 +199,19 @@ ALTER TABLE `data_input_pasien`
 -- AUTO_INCREMENT for table `data_pasien`
 --
 ALTER TABLE `data_pasien`
-  MODIFY `dp_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `dp_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `data_pmo`
 --
 ALTER TABLE `data_pmo`
-  MODIFY `pmo_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `pmo_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `data_user`
+--
+ALTER TABLE `data_user`
+  MODIFY `id_user` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
