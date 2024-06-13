@@ -151,8 +151,8 @@ require('configs/config.php');
 
                             <!-- DATA LAINNYA -->
                             <div class="d-flex justify-content-center">
-                                <div class="text-center mb-2 p-2">
-                                    <div class="text-sm"><strong>* DATA PEMERIKSAAN LAIN - LAIN *</strong></div>
+                                <div class="text-center form-control bg-dark mb-3 p-2">
+                                    <strong class="text-light">DATA PEMERIKSAAN LAIN - LAIN</strong>
                                 </div>
                             </div>
                             <div class="col-md-6">

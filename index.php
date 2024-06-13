@@ -13,7 +13,7 @@ if (isset($_SESSION['is_loged'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MCU - RS AK GANI</title>
+    <title>KLIPGA - RS AK GANI</title>
     <link rel="icon" type="image/x-icon" href="<?= BASE_URL ?>/assets/img/hesti.png">
     <link href="<?= BASE_URL ?>/assets/css/styles.css" rel="stylesheet" />
     <link href="<?= BASE_URL ?>/assets/css/custom.css" rel="stylesheet" />
