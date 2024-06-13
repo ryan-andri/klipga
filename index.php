@@ -117,7 +117,7 @@ if (isset($_SESSION['is_loged'])) {
                 }
 
                 $.ajax({
-                    url: "payload.php",
+                    url: "payload",
                     type: "POST",
                     dataType: "json",
                     data: {

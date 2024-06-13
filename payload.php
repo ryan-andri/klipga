@@ -2,6 +2,10 @@
 session_start();
 require_once('configs/config.php');
 
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    die(http_response_code(404));
+}
+
 $cmd = !empty($_POST["action"]) ? $_POST["action"] : '';
 
 $db = DBConnection::getInstance();
