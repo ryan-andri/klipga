@@ -189,7 +189,19 @@ $(document).ready(function () {
                             text: "Hapus",
                             action: function (e, dt, node, config) {
                                 let data = dt.row({ selected: true }).data();
-                                console.log(data);
+                                // hidden value
+                                $("#hid_pas_hapus").val(data.dp_id.toString());
+
+                                $("#ro_input_nama").val(data.dp_nama.toString());
+                                $("#ro_input_panggilan").val(data.dp_panggilan.toString());
+                                $("#ro_input_nik").val(data.dp_nik.toString());
+                                $("#ro_input_bpjs").val(data.dp_bpjs.toString());
+                                $("#ro_input_nama").prop("readonly", true);
+                                $("#ro_input_panggilan").prop("readonly", true);
+                                $("#ro_input_nik").prop("readonly", true);
+                                $("#ro_input_bpjs").prop("readonly", true);
+
+                                $("#modal_hapus_pasien").modal("show");
                             },
                             enabled: false
                         },
@@ -309,6 +321,47 @@ $(document).ready(function () {
                 });
                 return valid;
             }
+
+            $("#hapus_pasien").on("click", function () {
+                $("#hapus_pasien").text("Menghapus Pasien ...").addClass("disabled");
+                $.ajax({
+                    url: "../payload",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        action: "hapus_pasien",
+                        dp_id: $("#hid_pas_hapus").val()
+                    },
+                    complete: function () {
+                        $("#hapus_pasien").text("Hapus pasien").removeClass("disabled");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        $("#hapus_pasien").text("Hapus pasien").removeClass("disabled");
+                    },
+                    success: function (response) {
+                        switch (response) {
+                            case "success":
+                                $("#modal_hapus_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil dihapus!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "failed":
+                                swal({
+                                    text: "Data gagal dihapus!",
+                                    icon: "error",
+                                    button: false,
+                                });
+                                break;
+                        }
+                        tabel_pasien.ajax.reload(null, false);
+                        clearnbtn();
+                    }
+                });
+            });
 
             $("#simpan_pasien").on("click", function () {
                 if (!validation("pasien")) {

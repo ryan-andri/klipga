@@ -11,6 +11,50 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal_hapus_pasien" tabindex="-1" aria-labelledby="inputPasien" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hapus Pasien</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <input type="text" name="hid_pas_hapus" class="form-control" id="hid_pas_hapus" hidden>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" name="ro_input_nama" class="form-control disabled" id="ro_input_nama"
+                                    placeholder="Nama Pasien">
+                                <label for="ro_input_nama">Nama Pasien TBC</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control disabled" id="ro_input_panggilan" type="text"
+                                    name="ro_input_panggilan" placeholder="Nama Panggilan" />
+                                <label for="ro_input_panggilan">Nama Panggilan</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input class="form-control disabled" id="ro_input_nik" type="text" name="ro_input_nik"
+                                    placeholder="NIK" />
+                                <label for="ro_input_nik">NIK</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control disabled" id="ro_input_bpjs" type="text" name="ro_input_bpjs"
+                                    placeholder="No. BPJS" />
+                                <label for="ro_input_bpjs">No. BPJS</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="hapus_pasien" class="btn btn-danger form-control mb-0">Hapus
+                        Pasien</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Tambah Pasien -->
     <div class="modal fade" id="modal_pasien" tabindex="-1" aria-labelledby="tambahPasien" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">

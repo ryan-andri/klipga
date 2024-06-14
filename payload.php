@@ -446,6 +446,13 @@ switch ($cmd) {
             ));
         }
         break;
+    case 'hapus_pasien':
+        $query = "UPDATE data_pasien SET dp_status=0 WHERE dp_id=" . $_POST['dp_id'];
+        $stmt = $db->prepare($query);
+        $res = $stmt->execute();
+        usleep(500000);
+        echo json_encode($res ? "success" : "failed");
+        break;
     case 'login':
         $login_user = htmlspecialchars($_POST['user']);
         $login_pass = htmlspecialchars($_POST['pass']);
