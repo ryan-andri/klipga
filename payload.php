@@ -251,14 +251,19 @@ switch ($cmd) {
                     htmlspecialchars($_POST['input_jumlah_kontak_tbc']),
                     htmlspecialchars($_POST['input_riwayat_dm']),
                     htmlspecialchars($_POST['input_tes_dm']),
-                    htmlspecialchars($_POST['input_terapi_dm'])
+                    htmlspecialchars($_POST['input_terapi_dm']),
+                    htmlspecialchars($_POST['input_panduan_oat']),
+                    htmlspecialchars($_POST['input_panduan_oat_isian']),
+                    htmlspecialchars($_POST['input_bentuk_oat']),
+                    htmlspecialchars($_POST['input_sumber_obat']),
+                    htmlspecialchars($_POST['input_sumber_obat_isian'])
                 ];
             }
 
             if ($result) {
                 if ($cmd == "input_pasien") {
                     sleep(1);
-                    $query = "UPDATE data_input_pasien SET dip_dp_id=?, dip_tipe_diagnosis=?, dip_klasifikasi_anatomi=?, dip_ektraparu_lokasi=?, dip_klasifikasi_pengobatan_sebelumnya=?, dip_klasifikasi_icd10=?, dip_klasifikasi_hiv=?, dip_dirujuk_oleh=?, dip_dirujuk_oleh_isian=?, dip_pindahan_nama_fasyankes=?, dip_pindahan_alamat_fasyankes=?, dip_pindahan_kota=?, dip_pindahan_provinsi=?, dip_investigasi_kontak=?, dip_jumlah_kontak_serumah=?, dip_jumlah_kontak_investigasi=?, dip_jumlah_kontak_tbc=?, dip_riwayat_dm=?, dip_tes_dm=?, dip_terapi_dm=? WHERE dip_dp_id=" . $_POST['dp_id'];
+                    $query = "UPDATE data_input_pasien SET dip_dp_id=?, dip_tipe_diagnosis=?, dip_klasifikasi_anatomi=?, dip_ektraparu_lokasi=?, dip_klasifikasi_pengobatan_sebelumnya=?, dip_klasifikasi_icd10=?, dip_klasifikasi_hiv=?, dip_dirujuk_oleh=?, dip_dirujuk_oleh_isian=?, dip_pindahan_nama_fasyankes=?, dip_pindahan_alamat_fasyankes=?, dip_pindahan_kota=?, dip_pindahan_provinsi=?, dip_investigasi_kontak=?, dip_jumlah_kontak_serumah=?, dip_jumlah_kontak_investigasi=?, dip_jumlah_kontak_tbc=?, dip_riwayat_dm=?, dip_tes_dm=?, dip_terapi_dm=?, dip_panduan_oat=?, dip_panduan_oat_isian=?, dip_bentuk_oat=?, dip_sumber_obat=?, dip_sumber_obat_isian=? WHERE dip_dp_id=" . $_POST['dp_id'];
                     $stmt = $db->prepare($query);
                     $res = $stmt->execute($indexed);
                     echo json_encode($res ? "updated" : "failed");
@@ -271,7 +276,7 @@ switch ($cmd) {
             } else {
                 if ($cmd == "input_pasien") {
                     sleep(1);
-                    $query = "INSERT INTO data_input_pasien (dip_dp_id, dip_tipe_diagnosis, dip_klasifikasi_anatomi, dip_ektraparu_lokasi, dip_klasifikasi_pengobatan_sebelumnya, dip_klasifikasi_icd10, dip_klasifikasi_hiv, dip_dirujuk_oleh, dip_dirujuk_oleh_isian, dip_pindahan_nama_fasyankes, dip_pindahan_alamat_fasyankes, dip_pindahan_kota, dip_pindahan_provinsi, dip_investigasi_kontak, dip_jumlah_kontak_serumah, dip_jumlah_kontak_investigasi, dip_jumlah_kontak_tbc, dip_riwayat_dm, dip_tes_dm, dip_terapi_dm) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    $query = "INSERT INTO data_input_pasien (dip_dp_id, dip_tipe_diagnosis, dip_klasifikasi_anatomi, dip_ektraparu_lokasi, dip_klasifikasi_pengobatan_sebelumnya, dip_klasifikasi_icd10, dip_klasifikasi_hiv, dip_dirujuk_oleh, dip_dirujuk_oleh_isian, dip_pindahan_nama_fasyankes, dip_pindahan_alamat_fasyankes, dip_pindahan_kota, dip_pindahan_provinsi, dip_investigasi_kontak, dip_jumlah_kontak_serumah, dip_jumlah_kontak_investigasi, dip_jumlah_kontak_tbc, dip_riwayat_dm, dip_tes_dm, dip_terapi_dm, dip_panduan_oat, dip_panduan_oat_isian, dip_bentuk_oat, dip_sumber_obat, dip_sumber_obat_isian) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                     $stmt = $db->prepare($query);
                     $res = $stmt->execute($indexed);
                     echo json_encode($res ? "success" : "failed");

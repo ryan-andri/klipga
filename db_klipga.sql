@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 12, 2024 at 09:24 AM
+-- Generation Time: Jun 14, 2024 at 04:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,17 +48,13 @@ CREATE TABLE `data_input_pasien` (
   `dip_jumlah_kontak_tbc` varchar(255) NOT NULL DEFAULT '-',
   `dip_riwayat_dm` enum('Ya','Tidak') NOT NULL,
   `dip_tes_dm` enum('Positif','Negatif') NOT NULL,
-  `dip_terapi_dm` enum('OHO','Insulin') NOT NULL
+  `dip_terapi_dm` enum('OHO','Insulin') NOT NULL,
+  `dip_panduan_oat` enum('kategori-1','kategori-2','kategori anak') NOT NULL,
+  `dip_panduan_oat_isian` varchar(255) NOT NULL,
+  `dip_bentuk_oat` enum('KDT','Kombipak') NOT NULL,
+  `dip_sumber_obat` enum('Program TBC','Bayar sendiri','Asuransi','Lain-lain') NOT NULL,
+  `dip_sumber_obat_isian` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `data_input_pasien`
---
-
-INSERT INTO `data_input_pasien` (`dip_id`, `dip_dp_id`, `dip_tipe_diagnosis`, `dip_klasifikasi_anatomi`, `dip_ektraparu_lokasi`, `dip_klasifikasi_pengobatan_sebelumnya`, `dip_klasifikasi_icd10`, `dip_klasifikasi_hiv`, `dip_dirujuk_oleh`, `dip_dirujuk_oleh_isian`, `dip_pindahan_nama_fasyankes`, `dip_pindahan_alamat_fasyankes`, `dip_pindahan_kota`, `dip_pindahan_provinsi`, `dip_investigasi_kontak`, `dip_jumlah_kontak_serumah`, `dip_jumlah_kontak_investigasi`, `dip_jumlah_kontak_tbc`, `dip_riwayat_dm`, `dip_tes_dm`, `dip_terapi_dm`) VALUES
-(3, 2, 'Terkonfirmasi bakteriologis', 'TBC Ekstraparu', 'Test', 'Baru', '10', 'Negatif', 'Kader/Komunitas', 'testing bro', 'Test', 'Test', 'Test', 'Test', 'Ya', '12', '12', '12', 'Ya', 'Positif', 'Insulin'),
-(4, 3, 'Terdiagnosis klinis', 'TBC Paru', '-', 'Baru', '15', 'Tidak diketahui', 'Fasyankes lainnya', 'Test Kader', '-', '-', '-', '-', 'Ya', '10', '18', '20', 'Ya', 'Positif', 'Insulin'),
-(8, 1, 'Terkonfirmasi bakteriologis', 'TBC Ekstraparu', 'Test', 'Diobati setelah gagal', '123', 'Negatif', 'Kader/Komunitas', 'Test', '-', '-', '-', '-', 'Tidak', '-', '-', '-', 'Ya', 'Positif', 'Insulin');
 
 -- --------------------------------------------------------
 
@@ -103,7 +99,7 @@ INSERT INTO `data_pasien` (`dp_id`, `dp_nama`, `dp_panggilan`, `dp_nik`, `dp_bpj
 (1, 'Data Testing', 'Testing', '123456789', '1234', 'Jalan Testing', 'Testing', 'Perempuan', '-', '2024-05-28', 44, 168, 'Tidak Ada', '10', '123456789', 'Tidak', '22', '2024-05-28', '123/VM/XX/123', 'Testing', '2024-05-28', 'Testing', 'MTB', '-', '2024-06-11', 1),
 (2, 'Anggara', 'angga', '1231231231231', '1232132131', 'Test', 'Tes', 'Laki-Laki', '-', '2024-05-28', 60, 180, 'Ada', '80', '123123123123', 'Tidak', '22', '2024-05-28', '123/VM/XX/123', 'Testing', '2024-05-28', 'Testing', 'Bukan MTB', 'Testing', '2024-05-28', 1),
 (3, 'Budi', 'bud', '167101122003389', '123456789011', 'Testing', 'Testing', 'Laki-Laki', '-', '2024-05-28', 44, 165, 'Ada', '11', '11990092123218', 'Tidak', '24', '2024-05-28', 'Testing123', 'Testing', '2024-05-28', 'Testing', 'MTB', '-', '2024-05-28', 1),
-(11, 'Yoga', 'Yoga', '12345', '123', 'Test', 'test', 'Laki-Laki', '-', '2005-06-11', 11, 11, 'Ada', '12', '1234', 'Tidak', '10', '2024-06-11', 'test', 'test', '2024-06-11', 'Test', 'Bukan MTB', 'Test', '2024-06-05', 1);
+(11, 'Yoga', 'Yoga', '12345', '123', 'Test', 'test', 'Laki-Laki', '-', '2005-06-11', 11, 11, 'Ada', '12', '1234', 'Tidak', '10', '2024-06-11', 'test', 'test', '2024-06-11', 'Test', 'Bukan MTB', 'Test', '2024-06-14', 1);
 
 -- --------------------------------------------------------
 
@@ -193,7 +189,7 @@ ALTER TABLE `data_user`
 -- AUTO_INCREMENT for table `data_input_pasien`
 --
 ALTER TABLE `data_input_pasien`
-  MODIFY `dip_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `dip_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `data_pasien`

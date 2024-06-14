@@ -449,6 +449,24 @@ $(document).ready(function () {
                             $("#input_riwayat_dm").val(response["result"]["dip_riwayat_dm"]);
                             $("#input_tes_dm").val(response["result"]["dip_tes_dm"]);
                             $("#input_terapi_dm").val(response["result"]["dip_terapi_dm"]);
+
+                            // OAT & OBAT
+                            $("#input_panduan_oat").val(response["result"]["dip_panduan_oat"]);
+                            $("#input_panduan_oat_isian").val(response["result"]["dip_panduan_oat_isian"]);
+                            $("#input_bentuk_oat").val(response["result"]["dip_bentuk_oat"]);
+                            $("#input_sumber_obat").val(response["result"]["dip_sumber_obat"]);
+
+                            if ($("#input_sumber_obat").val() == "Program TBC"
+                                || $("#input_sumber_obat").val() == "Bayar sendiri") {
+                                $("#input_sumber_obat_isian").val("-");
+                                $("#input_sumber_obat_isian").prop("readonly", true);
+                                $("#input_sumber_obat_isian").addClass("disabled");
+                            } else {
+                                $("#input_sumber_obat_isian").val(response["result"]["dip_sumber_obat_isian"]);
+                                $("#input_sumber_obat_isian").prop("readonly", false);
+                                $("#input_sumber_obat_isian").removeClass("disabled");
+                            }
+
                         } else {
                             if ($("#input_investigasi_kontak").val() == "Tidak") {
                                 $("#input_jumlah_kontak_serumah").val("-");
@@ -461,6 +479,10 @@ $(document).ready(function () {
                                 $("#input_jumlah_kontak_tbc").prop("readonly", true);
                                 $("#input_jumlah_kontak_tbc").addClass("disabled");
                             }
+
+                            $("#input_sumber_obat_isian").val("-");
+                            $("#input_sumber_obat_isian").prop("readonly", true);
+                            $("#input_sumber_obat_isian").addClass("disabled");
                         }
                     },
                     complete: function (response) {
@@ -594,6 +616,19 @@ $(document).ready(function () {
                     $("#input_jumlah_kontak_tbc").val("");
                     $("#input_jumlah_kontak_tbc").prop("readonly", false);
                     $("#input_jumlah_kontak_tbc").removeClass("disabled");
+                }
+            });
+
+            $("#input_sumber_obat").on("change", function () {
+                if ($("#input_sumber_obat").val() == "Program TBC"
+                    || $("#input_sumber_obat").val() == "Bayar sendiri") {
+                    $("#input_sumber_obat_isian").val("-");
+                    $("#input_sumber_obat_isian").prop("readonly", true);
+                    $("#input_sumber_obat_isian").addClass("disabled");
+                } else {
+                    $("#input_sumber_obat_isian").val("");
+                    $("#input_sumber_obat_isian").prop("readonly", false);
+                    $("#input_sumber_obat_isian").removeClass("disabled");
                 }
             });
 
@@ -811,6 +846,23 @@ $(document).ready(function () {
                             $("#input_riwayat_dm").val(response["result"]["dip_riwayat_dm"]);
                             $("#input_tes_dm").val(response["result"]["dip_tes_dm"]);
                             $("#input_terapi_dm").val(response["result"]["dip_terapi_dm"]);
+
+                            // OAT & OBAT
+                            $("#input_panduan_oat").val(response["result"]["dip_panduan_oat"]);
+                            $("#input_panduan_oat_isian").val(response["result"]["dip_panduan_oat_isian"]);
+                            $("#input_bentuk_oat").val(response["result"]["dip_bentuk_oat"]);
+                            $("#input_sumber_obat").val(response["result"]["dip_sumber_obat"]);
+
+                            if ($("#input_sumber_obat").val() == "Program TBC") {
+                                $("#input_sumber_obat_isian").val("-");
+                                $("#input_sumber_obat_isian").prop("readonly", true);
+                                $("#input_sumber_obat_isian").addClass("disabled");
+                            } else {
+                                $("#input_sumber_obat_isian").val(response["result"]["dip_sumber_obat_isian"]);
+                                $("#input_sumber_obat_isian").prop("readonly", false);
+                                $("#input_sumber_obat_isian").removeClass("disabled");
+                            }
+
                         } else {
                             if ($("#input_investigasi_kontak").val() == "Tidak") {
                                 $("#input_jumlah_kontak_serumah").val("-");
@@ -823,6 +875,10 @@ $(document).ready(function () {
                                 $("#input_jumlah_kontak_tbc").prop("readonly", true);
                                 $("#input_jumlah_kontak_tbc").addClass("disabled");
                             }
+
+                            $("#input_sumber_obat_isian").val("-");
+                            $("#input_sumber_obat_isian").prop("readonly", true);
+                            $("#input_sumber_obat_isian").addClass("disabled");
                         }
                     },
                     complete: function (response) {
@@ -930,6 +986,19 @@ $(document).ready(function () {
                     $("#input_jumlah_kontak_tbc").val("");
                     $("#input_jumlah_kontak_tbc").prop("readonly", false);
                     $("#input_jumlah_kontak_tbc").removeClass("disabled");
+                }
+            });
+
+            $("#input_sumber_obat").on("change", function () {
+                if ($("#input_sumber_obat").val() == "Program TBC"
+                    || $("#input_sumber_obat").val() == "Bayar sendiri") {
+                    $("#input_sumber_obat_isian").val("-");
+                    $("#input_sumber_obat_isian").prop("readonly", true);
+                    $("#input_sumber_obat_isian").addClass("disabled");
+                } else {
+                    $("#input_sumber_obat_isian").val("");
+                    $("#input_sumber_obat_isian").prop("readonly", false);
+                    $("#input_sumber_obat_isian").removeClass("disabled");
                 }
             });
         });
