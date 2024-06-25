@@ -1057,6 +1057,332 @@ $(document).ready(function () {
         });
     });
 
+    // Module Users
+    $("#nav_users").on("click", function () {
+        $("#content").load("menu/mod_users.html", function () {
+            var tabel_user = $("#tabel_users").DataTable({
+                dom: "Bfrtip",
+                order: [[0, "Asc"]],
+                processing: true,
+                serverSide: true,
+                select: true,
+                language: {
+                    processing: "<div class='spinner-border'></div>",
+                },
+                pageLength: 10,
+                ajax: {
+                    url: "../payload",
+                    type: "POST",
+                    dataType: "json",
+                    cache: false,
+                    data: {
+                        action: "load_users"
+                    },
+                    complete: function () {
+                        clearnbtn();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        clearnbtn();
+                    },
+                },
+                buttons: [
+                    {
+                        text: "Tambah User",
+                        action: function (e, dt, node, config) {
+                            $("#form_user")[0].reset();
+
+                            // show modal
+                            $("#modal_user").modal("show");
+                        },
+                        enabled: true
+                    },
+                    {
+                        text: "Edit",
+                        action: function (e, dt, node, config) {
+                            let data = dt.row({ selected: true }).data();
+
+                            $("#form_user")[0].reset();
+
+                            $("#hid_user").val(data.dp_id.toString());
+                            $("#action_user").val("update");
+
+                            $("#modal_user").modal("show");
+                        },
+                        enabled: false
+                    },
+                    {
+                        text: "Hapus",
+                        action: function (e, dt, node, config) {
+                            let data = dt.row({ selected: true }).data();
+
+                            $("#modal_user").modal("show");
+                        },
+                        enabled: false
+                    },
+                    {
+                        text: "Refresh",
+                        action: function (e, dt, node, config) {
+                            tabel_user.ajax.reload(null, false);
+                            clearnbtn();
+                        },
+                        enabled: true
+                    }
+                ],
+                columns: [
+                    {
+                        data: "id_user",
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: "nama_user",
+                        orderable: false
+                    },
+                    {
+                        data: "username_user",
+                        orderable: false
+                    },
+                    {
+                        data: "password_user",
+                        orderable: false
+                    },
+                    {
+                        data: "role_user",
+                        orderable: false
+                    },
+                    {
+                        data: "status_user",
+                        orderable: false
+                    }
+                ],
+            });
+
+            tabel_user.on("select deselect", function (e, dt, node, config) {
+                let selectedRows = tabel_user.rows({ selected: true }).count();
+                let res = dt.row({ selected: true }).data();
+                tabel_user.button(1).enable(selectedRows > 0);
+                tabel_user.button(2).enable(selectedRows > 0);
+                tabel_user.button(3).enable(selectedRows > 0);
+            });
+
+            function clearnbtn() {
+                for (var i = 1; i <= 3; i++) {
+                    tabel_user.button(i).enable(false);
+                }
+            }
+
+            function validation(input) {
+                let ele = "empty";
+                let valid = true;
+
+                switch (input) {
+                    case "user":
+                        ele = "#form_user input, #form_user select";
+                        break;
+                    default: break;
+                }
+
+                $(ele).each(function () {
+                    if ($.trim($(this).val()).length == 0) {
+                        $(this).addClass("error");
+                        valid = false;
+                        $(this).focus();
+                    } else {
+                        $(this).removeClass("error");
+                    }
+                });
+                return valid;
+            }
+
+            $("#hapus_pasien").on("click", function () {
+                $("#hapus_pasien").text("Menghapus Pasien ...").addClass("disabled");
+                $.ajax({
+                    url: "../payload",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        action: "hapus_pasien",
+                        dp_id: $("#hid_pas_hapus").val()
+                    },
+                    complete: function () {
+                        $("#hapus_pasien").text("Hapus pasien").removeClass("disabled");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        $("#hapus_pasien").text("Hapus pasien").removeClass("disabled");
+                    },
+                    success: function (response) {
+                        switch (response) {
+                            case "success":
+                                $("#modal_hapus_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil dihapus!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "failed":
+                                swal({
+                                    text: "Data gagal dihapus!",
+                                    icon: "error",
+                                    button: false,
+                                });
+                                break;
+                        }
+                        tabel_user.ajax.reload(null, false);
+                        clearnbtn();
+                    }
+                });
+            });
+
+            $("#simpan_pasien").on("click", function () {
+                if (!validation("pasien")) {
+                    alert("Bagian form tidak boleh ada yang kosong.");
+                    return;
+                }
+
+                let df = $("#form_pasien").serializeArray();
+
+                // force to - value (disabled element)
+                if ($("#input_kelamin").val() == "Laki-Laki") {
+                    df.push({
+                        name: "input_usia_subur",
+                        value: "-"
+                    });
+                }
+
+                if ($("#input_uji_nondahak").val() != "Bukan MTB") {
+                    df.push({
+                        name: "input_nama_nonmtb",
+                        value: "-"
+                    });
+                }
+
+                let action = $("#action").val().toString();
+                let hid = $("#hid").val().toString();
+
+                // lock button before send data
+                $("#simpan_pasien").text("Menyimpan Data ...").addClass("disabled");
+
+                $.ajax({
+                    url: "../payload",
+                    type: "POST",
+                    dataType: "json",
+                    data: "action=" + action + "&"
+                        + "dp_id=" + hid + "&"
+                        + $.param(df),
+                    complete: function () {
+                        $("#simpan_pasien").text("Simpan").removeClass("disabled");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        $("#simpan_pasien").text("Simpan").removeClass("disabled");
+                    },
+                    success: function (response) {
+                        switch (response) {
+                            case "success":
+                                $("#modal_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil disimpan!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "updated":
+                                $("#modal_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil diupdate!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "exist":
+                                $("#modal_pasien").modal("hide");
+                                swal({
+                                    text: "Data sudah ada pada hari ini",
+                                    icon: "info",
+                                    button: false,
+                                });
+                                break;
+                            case "failed":
+                            case "error":
+                                swal({
+                                    text: "Data gagal disimpan!",
+                                    icon: "error",
+                                    button: false,
+                                });
+                                break;
+                        }
+                        tabel_user.ajax.reload(null, false);
+                        clearnbtn();
+                    }
+                });
+            });
+
+            $("#simpan_user").on("click", function () {
+                if (!validation("pasien_lanjutan")) {
+                    alert("Bagian form tidak boleh ada yang kosong.");
+                    return;
+                }
+
+                let df = $("#form_input_pasien").serializeArray();
+                let action = $("#action_input").val().toString();
+                let hid = $("#hid_pasien").val().toString();
+
+                // lock button before send data
+                $("#simpan_input_pasien").text("Menyimpan Data ...").addClass("disabled");
+
+                $.ajax({
+                    url: "../payload",
+                    type: "POST",
+                    dataType: "json",
+                    data: "action=" + action + "&"
+                        + "dp_id=" + hid + "&"
+                        + $.param(df),
+                    complete: function () {
+                        $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                    },
+                    success: function (response) {
+                        switch (response) {
+                            case "success":
+                                $("#modal_input_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil disimpan!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "updated":
+                                $("#modal_input_pasien").modal("hide");
+                                swal({
+                                    text: "Data Berhasil diupdate!",
+                                    icon: "success",
+                                    button: false,
+                                });
+                                break;
+                            case "failed":
+                            case "error":
+                                swal({
+                                    text: "Data gagal disimpan!",
+                                    icon: "error",
+                                    button: false,
+                                });
+                                break;
+                        }
+                        tabel_user.ajax.reload(null, false);
+                        clearnbtn();
+                    }
+                });
+            });
+        });
+    });
+
     $("#logout").on("click", function (event) {
         event.preventDefault();
         swal({

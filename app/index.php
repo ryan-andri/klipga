@@ -33,29 +33,29 @@ require('auth.php');
             <span><img class="img-fluid mb-2 ms-3" src="<?= BASE_URL ?>/assets/img/paru.png" width="35px">
             </span>
         </a>
-        <button class="btn btn-link btn-sm ms-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-        <ul class="navbar-nav d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="javascript:void(0);"><i class="fas fa-bars"></i></button>
+        <ul class="navbar-nav ms-auto me-3">
             <li class="nav-item dropdown">
-                <a class="dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <a class="dropdown-toggle" id="navbarDropdown" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:grey;"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="#!"><i class="fas fa-key me-2"></i><span>Ubah Password</span></a></li>
                     <li><a class="dropdown-item" id="logout" href="#!">Logout</a></li>
-
                 </ul>
             </li>
         </ul>
     </nav>
+
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <div class="sb-sidenav-menu-heading">Home</div>
                         <a class="nav-link active" id="nav_dashboard">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <div class="sb-sidenav-menu-heading">Interface</div>
+                        <div class="sb-sidenav-menu-heading">Module</div>
                         <a class="nav-link" id="nav_data_pasien">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Data Pasien
@@ -64,6 +64,13 @@ require('auth.php');
                             <div class="sb-nav-link-icon"><i class="fas fa-notes-medical"></i></div>
                             Data belum input
                         </a>
+                        <?php if (isset($_SESSION['role']) == "admin") { ?>
+                            <div class="sb-sidenav-menu-heading">Settings</div>
+                            <a class="nav-link" id="nav_users">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Pengguna
+                            </a>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -74,8 +81,8 @@ require('auth.php');
         </div>
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4">
-                    <div class="mt-2" id="content"></div>
+                <div class="container-fluid px-2">
+                    <div id="content"></div>
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
