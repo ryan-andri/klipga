@@ -60,11 +60,7 @@ require('auth.php');
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Data Pasien
                         </a>
-                        <a class="nav-link" id="nav_belum_input">
-                            <div class="sb-nav-link-icon"><i class="fas fa-notes-medical"></i></div>
-                            Data belum input
-                        </a>
-                        <?php if (isset($_SESSION['role']) == "admin") { ?>
+                        <?php if ($_SESSION['role'] == "admin") { ?>
                             <div class="sb-sidenav-menu-heading">Settings</div>
                             <a class="nav-link" id="nav_users">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>

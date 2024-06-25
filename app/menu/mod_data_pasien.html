@@ -8,6 +8,15 @@
                     <label for="input_tgl_filter">Tanggal Filter</label>
                 </div>
             </div>
+            <div class="col-sm-3">
+                <div class="form-floating">
+                    <select name="filter_data" class="form-select" id="filter_data" placeholder="Filter">
+                        <option value="1" selected>Sudah input</option>
+                        <option value="0">Belum input</option>
+                    </select>
+                    <label for="filter_data">Filter</label>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -23,26 +32,26 @@
                         <input type="text" name="hid_pas_hapus" class="form-control" id="hid_pas_hapus" hidden>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="text" name="ro_input_nama" class="form-control disabled" id="ro_input_nama"
-                                    placeholder="Nama Pasien">
-                                <label for="ro_input_nama">Nama Pasien TBC</label>
+                                <input type="text" name="ro_del_input_nama" class="form-control disabled"
+                                    id="ro_del_input_nama" placeholder="Nama Pasien">
+                                <label for="ro_del_input_nama">Nama Pasien TBC</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control disabled" id="ro_input_panggilan" type="text"
-                                    name="ro_input_panggilan" placeholder="Nama Panggilan" />
-                                <label for="ro_input_panggilan">Nama Panggilan</label>
+                                <input class="form-control disabled" id="ro_del_input_panggilan" type="text"
+                                    name="ro_del_input_panggilan" placeholder="Nama Panggilan" />
+                                <label for="ro_del_input_panggilan">Nama Panggilan</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input class="form-control disabled" id="ro_input_nik" type="text" name="ro_input_nik"
-                                    placeholder="NIK" />
-                                <label for="ro_input_nik">NIK</label>
+                                <input class="form-control disabled" id="ro_del_input_nik" type="text"
+                                    name="ro_del_input_nik" placeholder="NIK" />
+                                <label for="ro_del_input_nik">NIK</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control disabled" id="ro_input_bpjs" type="text" name="ro_input_bpjs"
-                                    placeholder="No. BPJS" />
-                                <label for="ro_input_bpjs">No. BPJS</label>
+                                <input class="form-control disabled" id="ro_del_input_bpjs" type="text"
+                                    name="ro_del_input_bpjs" placeholder="No. BPJS" />
+                                <label for="ro_del_input_bpjs">No. BPJS</label>
                             </div>
                         </div>
                     </div>

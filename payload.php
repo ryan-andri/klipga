@@ -104,28 +104,26 @@ switch ($cmd) {
             $draw = $_POST['draw'];
             $rows = $_POST['start'];
             $rowperpage = $_POST['length'];
-            $columnIndex = $_POST['order'][0]['column'];
-            $columnName = $_POST['columns'][$columnIndex]['data'];
-            $columnSortOrder = $_POST['order'][0]['dir'];
             $searchValue = $_POST['search']['value'];
             $filter_date = $_POST['filter_date'];
+            $df = $_POST['df_filter'] == 1 ? "" : " IS NULL ";
 
-            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien WHERE data_pasien.dp_status=1 ");
+            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien dp LEFT JOIN data_input_pasien dip ON dp.dp_id = dip.dip_dp_id WHERE dp.dp_status=1 AND dip.dip_dp_id " . $df);
             $stmt->execute();
             $records = $stmt->fetch();
             $totalRecords = $records['allcount'];
 
             $date_filter = " ";
             if (!empty($filter_date)) {
-                $date_filter = "AND data_pasien.dp_tgl_input = '" . $filter_date . "' ";
+                $date_filter = "AND dp.dp_tgl_input = '" . $filter_date . "' ";
             }
 
             $searchArray = array();
             $searchQuery = " ";
             if (!empty($searchValue)) {
-                $searchQuery = "AND (data_pasien.dp_nama LIKE :dp_nama OR data_pasien.dp_nik LIKE :dp_nik
-                    OR data_pasien.dp_panggilan LIKE :dp_panggilan OR data_pasien.dp_nohp LIKE :dp_nohp
-                    OR data_pasien.dp_kelamin LIKE :dp_kelamin OR data_pasien.dp_bpjs LIKE :dp_bpjs) ";
+                $searchQuery = "AND (dp.dp_nama LIKE :dp_nama OR dp.dp_nik LIKE :dp_nik
+                        OR dp.dp_panggilan LIKE :dp_panggilan OR dp.dp_nohp LIKE :dp_nohp
+                        OR dp.dp_kelamin LIKE :dp_kelamin OR dp.dp_bpjs LIKE :dp_bpjs) ";
                 $searchArray = array(
                     'dp_nama' => "%$searchValue%",
                     'dp_nik' => "%$searchValue%",
@@ -136,22 +134,19 @@ switch ($cmd) {
                 );
             }
 
-            $final_filter = " 1 AND data_pasien.dp_status=1 " . $date_filter . $searchQuery;
+            $final_filter = " dp.dp_status=1 AND dip.dip_dp_id " . $df . $date_filter . $searchQuery;
 
             // usleep(200000);
 
-            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien WHERE" . $final_filter);
+            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien dp JOIN data_input_pasien dip ON dp.dp_id = dip.dip_dp_id WHERE " . $final_filter);
             $stmt->execute($searchArray);
             $records = $stmt->fetch();
             $totalRecordwithFilter = $records['allcount'];
 
             usleep(400000);
 
-            $fields = "SELECT data_pasien.dp_id, data_pasien.dp_nama, data_pasien.dp_panggilan, data_pasien.dp_nik, data_pasien.dp_bpjs, data_pasien.dp_alamat, data_pasien.dp_pekerjaan, data_pasien.dp_kelamin, data_pasien.dp_usia_subur, data_pasien.dp_tgl_lahir, data_pasien.dp_berat_badan, data_pasien.dp_tinggi_badan, data_pasien.dp_imun_bcg, data_pasien.dp_skor_tb_anak, data_pasien.dp_nohp, data_pasien.dp_petugas_kes, data_pasien.dp_uji_tbc, data_pasien.dp_date_toraks, data_pasien.dp_toraks_seri, data_pasien.dp_toraks_kesan, data_pasien.dp_date_fnab, data_pasien.dp_hasil_fnab, data_pasien.dp_uji_nondahak, data_pasien.dp_nama_nonmtb, data_pasien.dp_tgl_input, data_pasien.dp_status, data_pmo.pmo_id, data_pmo.dp_id as pmo_dp_id, data_pmo.pmo_nama, data_pmo.pmo_alamat, data_pmo.pmo_fasyankes, data_pmo.pmo_kota, data_pmo.pmo_tbc3_faskes, data_pmo.pmo_tahun, data_pmo.pmo_provinsi, data_pmo.pmo_tbc3_kota, data_pmo.pmo_telpon FROM data_pasien ";
-            $join = " JOIN data_pmo ON data_pasien.dp_id = data_pmo.dp_id WHERE ";
-
-            $stmt = $db->prepare($fields . $join . $final_filter
-                . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+            $fields = "SELECT dp.*, pmo.*, dip.* FROM data_pasien dp LEFT JOIN data_input_pasien dip ON dp.dp_id = dip.dip_dp_id LEFT JOIN data_pmo pmo ON dp.dp_id = pmo.dp_id WHERE ";
+            $stmt = $db->prepare($fields . $final_filter . " LIMIT :limit,:offset");
 
             foreach ($searchArray as $key => $search) {
                 $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
@@ -192,7 +187,7 @@ switch ($cmd) {
                     'dp_tgl_input' => $row['dp_tgl_input'],
                     'dp_status' => $row['dp_status'],
                     'pmo_id' => $row['pmo_id'],
-                    'pmo_dp_id' => $row['pmo_dp_id'],
+                    'pmo_dp_id' => $row['dp_id'],
                     'pmo_nama' => $row['pmo_nama'],
                     'pmo_alamat' => $row['pmo_alamat'],
                     'pmo_fasyankes' => $row['pmo_fasyankes'],
@@ -336,114 +331,6 @@ switch ($cmd) {
                     "messages" => $e
                 )
             );
-        }
-        break;
-    case 'load_pasien_belum_input':
-        try {
-            $draw = $_POST['draw'];
-            $rows = $_POST['start'];
-            $rowperpage = $_POST['length'];
-            $columnIndex = $_POST['order'][0]['column'];
-            $columnName = $_POST['columns'][$columnIndex]['data'];
-            $columnSortOrder = $_POST['order'][0]['dir'];
-            $searchValue = $_POST['search']['value'];
-            $filter_date = $_POST['filter_date'];
-
-            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien dp LEFT JOIN data_input_pasien dip ON dp.dp_id = dip.dip_dp_id WHERE dp.dp_status=1 AND dip.dip_dp_id IS NULL");
-            $stmt->execute();
-            $records = $stmt->fetch();
-            $totalRecords = $records['allcount'];
-
-            $date_filter = " ";
-            if (!empty($filter_date)) {
-                $date_filter = "AND dp.dp_tgl_input = '" . $filter_date . "' ";
-            }
-
-            $searchArray = array();
-            $searchQuery = " ";
-            if (!empty($searchValue)) {
-                $searchQuery = "AND (dp.dp_nama LIKE :dp_nama OR dp.dp_nik LIKE :dp_nik
-                        OR dp.dp_panggilan LIKE :dp_panggilan OR dp.dp_nohp LIKE :dp_nohp
-                        OR dp.dp_kelamin LIKE :dp_kelamin OR dp.dp_bpjs LIKE :dp_bpjs) ";
-                $searchArray = array(
-                    'dp_nama' => "%$searchValue%",
-                    'dp_nik' => "%$searchValue%",
-                    'dp_panggilan' => "%$searchValue%",
-                    'dp_nohp' => "%$searchValue%",
-                    'dp_kelamin' => "%$searchValue%",
-                    'dp_bpjs' => "%$searchValue%"
-                );
-            }
-
-            $final_filter = " dp.dp_status=1 AND dip.dip_dp_id IS NULL " . $date_filter . $searchQuery;
-
-            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_pasien dp LEFT JOIN data_input_pasien dip ON dp.dp_id = dip.dip_dp_id WHERE" . $final_filter);
-            $stmt->execute($searchArray);
-            $records = $stmt->fetch();
-            $totalRecordwithFilter = $records['allcount'];
-
-            usleep(400000);
-
-            $fields = "SELECT dp.*, dip.* FROM data_pasien dp LEFT JOIN data_input_pasien dip ON dp.dp_id = dip.dip_dp_id WHERE ";
-            $stmt = $db->prepare($fields . $final_filter
-                . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
-
-            foreach ($searchArray as $key => $search) {
-                $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
-            }
-
-            $stmt->bindValue(':limit', (int)$rows, PDO::PARAM_INT);
-            $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
-            $stmt->execute();
-            $res = $stmt->fetchAll();
-            $data = array();
-
-            foreach ($res as $row) {
-                $data[] = array(
-                    'dp_id' => $row['dp_id'],
-                    'dp_nama' => $row['dp_nama'],
-                    'dp_panggilan' => $row['dp_panggilan'],
-                    'dp_nik' => $row['dp_nik'],
-                    'dp_bpjs' => $row['dp_bpjs'],
-                    'dp_alamat' => $row['dp_alamat'],
-                    'dp_pekerjaan' => $row['dp_pekerjaan'],
-                    'dp_kelamin' => $row['dp_kelamin'],
-                    'dp_usia_subur' => $row['dp_usia_subur'],
-                    'dp_tgl_lahir' => $row['dp_tgl_lahir'],
-                    'dp_berat_badan' => $row['dp_berat_badan'],
-                    'dp_tinggi_badan' => $row['dp_tinggi_badan'],
-                    'dp_imun_bcg' => $row['dp_imun_bcg'],
-                    'dp_skor_tb_anak' => $row['dp_skor_tb_anak'],
-                    'dp_nohp' => $row['dp_nohp'],
-                    'dp_petugas_kes' => $row['dp_petugas_kes'],
-                    'dp_uji_tbc' => $row['dp_uji_tbc'],
-                    'dp_date_toraks' => $row['dp_date_toraks'],
-                    'dp_toraks_seri' => $row['dp_toraks_seri'],
-                    'dp_toraks_kesan' => $row['dp_toraks_kesan'],
-                    'dp_date_fnab' => $row['dp_date_fnab'],
-                    'dp_hasil_fnab' => $row['dp_hasil_fnab'],
-                    'dp_uji_nondahak' => $row['dp_uji_nondahak'],
-                    'dp_nama_nonmtb' => $row['dp_nama_nonmtb'],
-                    'dp_tgl_input' => $row['dp_tgl_input'],
-                    'dp_status' => $row['dp_status']
-                );
-            }
-
-            // usleep(200000);
-
-            echo json_encode(array(
-                "draw" => intval($draw),
-                "recordsTotal" => $totalRecords,
-                "recordsFiltered" => $totalRecordwithFilter,
-                "data" => $data
-            ));
-        } catch (PDOException $e) {
-            echo json_encode(array(
-                "draw" => 0,
-                "recordsTotal" => 0,
-                "recordsFiltered" => 0,
-                "data" => null
-            ));
         }
         break;
     case 'hapus_pasien':
