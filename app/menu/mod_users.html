@@ -1,5 +1,77 @@
-<h3>Data Pengguna</h3>
-<div class="card mt-4">
+<div class="card mt-2">
+    <div class="card-header">
+        <h3>Data Pengguna</h3>
+    </div>
+    <div class="modal fade" id="modal_user" tabindex="-1" aria-labelledby="addUsers" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form_user">
+                        <div class="row">
+                            <input type="text" name="hid_pas_hapus" class="form-control" id="hid_pas_hapus" hidden>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="user_nama" class="form-control" id="user_nama"
+                                        placeholder="Nama User">
+                                    <label for="user_nama">Nama User</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" id="user_username" type="text" name="user_username"
+                                        placeholder="Username" />
+                                    <label for="user_username">Username</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <select name="user_role" class="form-select" id="user_role" placeholder="Role User">
+                                        <option selected disabled>-</option>
+                                        <option value="user">User</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                    <label for="user_role">Role User</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select name="user_status" class="form-select" id="user_status"
+                                        placeholder="Role User">
+                                        <option value="1" selected>Aktif</option>
+                                        <option value="0">Non Aktif</option>
+                                    </select>
+                                    <label for="user_status">Status User</label>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="form-floating">
+                                        <input id="user_password" type="password" class="form-control"
+                                            name="user_password" placeholder="Password">
+                                        <label for="user_password">Password</label>
+                                    </div>
+                                    <span class="input-group-text shp"><i class="fa fa-eye fa-eye-slash"
+                                            id="shp"></i></span>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="form-floating">
+                                        <input id="user_password_repeat" type="password" class="form-control"
+                                            name="user_password_repeat" placeholder="Ulang password">
+                                        <label for="user_password_repeat">Ulang password</label>
+                                    </div>
+                                    <span class="input-group-text shpr"><i class="fa fa-eye fa-eye-slash"
+                                            id="shpr"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="simpan_user"
+                                class="btn btn-danger form-control mb-0">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card-body">
         <table id="tabel_users" class="dataTable dt-responsive table table-striped nowrap" style="width:100%">
             <thead>

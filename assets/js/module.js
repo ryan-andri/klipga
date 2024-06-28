@@ -46,8 +46,6 @@ $(document).ready(function () {
                 $("#loading").addClass("d-none");
             }
         });
-
-        $("#dts").DataTable();
     }
 
     $("#nav_data_pasien").on("click", function () {
@@ -188,14 +186,14 @@ $(document).ready(function () {
                                 // hidden value
                                 $("#hid_pas_hapus").val(data.dp_id.toString());
 
-                                $("#ro_input_nama").val(data.dp_nama.toString());
-                                $("#ro_input_panggilan").val(data.dp_panggilan.toString());
-                                $("#ro_input_nik").val(data.dp_nik.toString());
-                                $("#ro_input_bpjs").val(data.dp_bpjs.toString());
-                                $("#ro_input_nama").prop("readonly", true);
-                                $("#ro_input_panggilan").prop("readonly", true);
-                                $("#ro_input_nik").prop("readonly", true);
-                                $("#ro_input_bpjs").prop("readonly", true);
+                                $("#ro_del_input_nama").val(data.dp_nama.toString());
+                                $("#ro_del_input_panggilan").val(data.dp_panggilan.toString());
+                                $("#ro_del_input_nik").val(data.dp_nik.toString());
+                                $("#ro_del_input_bpjs").val(data.dp_bpjs.toString());
+                                $("#ro_del_input_nama").prop("readonly", true);
+                                $("#ro_del_input_panggilan").prop("readonly", true);
+                                $("#ro_del_input_nik").prop("readonly", true);
+                                $("#ro_del_input_bpjs").prop("readonly", true);
 
                                 $("#modal_hapus_pasien").modal("show");
                             },
@@ -238,7 +236,8 @@ $(document).ready(function () {
                             data: "dp_id",
                             render: function (data, type, row, meta) {
                                 return meta.row + meta.settings._iDisplayStart + 1;
-                            }
+                            },
+                            orderable: false
                         },
                         {
                             data: "dp_nama",
@@ -774,7 +773,8 @@ $(document).ready(function () {
                         data: "id_user",
                         render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
-                        }
+                        },
+                        orderable: false
                     },
                     {
                         data: "nama_user",
@@ -782,10 +782,6 @@ $(document).ready(function () {
                     },
                     {
                         data: "username_user",
-                        orderable: false
-                    },
-                    {
-                        data: "password_user",
                         orderable: false
                     },
                     {
@@ -804,11 +800,10 @@ $(document).ready(function () {
                 let res = dt.row({ selected: true }).data();
                 tabel_user.button(1).enable(selectedRows > 0);
                 tabel_user.button(2).enable(selectedRows > 0);
-                tabel_user.button(3).enable(selectedRows > 0);
             });
 
             function clearnbtn() {
-                for (var i = 1; i <= 3; i++) {
+                for (var i = 1; i <= 2; i++) {
                     tabel_user.button(i).enable(false);
                 }
             }
@@ -836,189 +831,84 @@ $(document).ready(function () {
                 return valid;
             }
 
-            $("#hapus_pasien").on("click", function () {
-                $("#hapus_pasien").text("Menghapus Pasien ...").addClass("disabled");
-                $.ajax({
-                    url: "../payload",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        action: "hapus_pasien",
-                        dp_id: $("#hid_pas_hapus").val()
-                    },
-                    complete: function () {
-                        $("#hapus_pasien").text("Hapus pasien").removeClass("disabled");
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error);
-                        $("#hapus_pasien").text("Hapus pasien").removeClass("disabled");
-                    },
-                    success: function (response) {
-                        switch (response) {
-                            case "success":
-                                $("#modal_hapus_pasien").modal("hide");
-                                swal({
-                                    text: "Data Berhasil dihapus!",
-                                    icon: "success",
-                                    button: false,
-                                });
-                                break;
-                            case "failed":
-                                swal({
-                                    text: "Data gagal dihapus!",
-                                    icon: "error",
-                                    button: false,
-                                });
-                                break;
-                        }
-                        tabel_user.ajax.reload(null, false);
-                        clearnbtn();
-                    }
-                });
-            });
-
-            $("#simpan_pasien").on("click", function () {
-                if (!validation("pasien")) {
-                    alert("Bagian form tidak boleh ada yang kosong.");
+            $("#simpan_user").on("click", function () {
+                if ($("#user_password").val() != $("#user_password_repeat").val()) {
+                    alert("Password Tidak Sama!");
                     return;
                 }
 
-                let df = $("#form_pasien").serializeArray();
-
-                // force to - value (disabled element)
-                if ($("#input_kelamin").val() == "Laki-Laki") {
-                    df.push({
-                        name: "input_usia_subur",
-                        value: "-"
-                    });
-                }
-
-                if ($("#input_uji_nondahak").val() != "Bukan MTB") {
-                    df.push({
-                        name: "input_nama_nonmtb",
-                        value: "-"
-                    });
-                }
-
-                let action = $("#action").val().toString();
-                let hid = $("#hid").val().toString();
-
-                // lock button before send data
-                $("#simpan_pasien").text("Menyimpan Data ...").addClass("disabled");
-
-                $.ajax({
-                    url: "../payload",
-                    type: "POST",
-                    dataType: "json",
-                    data: "action=" + action + "&"
-                        + "dp_id=" + hid + "&"
-                        + $.param(df),
-                    complete: function () {
-                        $("#simpan_pasien").text("Simpan").removeClass("disabled");
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error);
-                        $("#simpan_pasien").text("Simpan").removeClass("disabled");
-                    },
-                    success: function (response) {
-                        switch (response) {
-                            case "success":
-                                $("#modal_pasien").modal("hide");
-                                swal({
-                                    text: "Data Berhasil disimpan!",
-                                    icon: "success",
-                                    button: false,
-                                });
-                                break;
-                            case "updated":
-                                $("#modal_pasien").modal("hide");
-                                swal({
-                                    text: "Data Berhasil diupdate!",
-                                    icon: "success",
-                                    button: false,
-                                });
-                                break;
-                            case "exist":
-                                $("#modal_pasien").modal("hide");
-                                swal({
-                                    text: "Data sudah ada pada hari ini",
-                                    icon: "info",
-                                    button: false,
-                                });
-                                break;
-                            case "failed":
-                            case "error":
-                                swal({
-                                    text: "Data gagal disimpan!",
-                                    icon: "error",
-                                    button: false,
-                                });
-                                break;
-                        }
-                        tabel_user.ajax.reload(null, false);
-                        clearnbtn();
-                    }
-                });
-            });
-
-            $("#simpan_user").on("click", function () {
                 if (!validation("pasien_lanjutan")) {
                     alert("Bagian form tidak boleh ada yang kosong.");
                     return;
                 }
 
-                let df = $("#form_input_pasien").serializeArray();
-                let action = $("#action_input").val().toString();
-                let hid = $("#hid_pasien").val().toString();
+                // let df = $("#form_input_pasien").serializeArray();
+                // let action = $("#action_input").val().toString();
+                // let hid = $("#hid_pasien").val().toString();
 
-                // lock button before send data
-                $("#simpan_input_pasien").text("Menyimpan Data ...").addClass("disabled");
+                // // lock button before send data
+                // $("#simpan_input_pasien").text("Menyimpan Data ...").addClass("disabled");
 
-                $.ajax({
-                    url: "../payload",
-                    type: "POST",
-                    dataType: "json",
-                    data: "action=" + action + "&"
-                        + "dp_id=" + hid + "&"
-                        + $.param(df),
-                    complete: function () {
-                        $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error);
-                        $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
-                    },
-                    success: function (response) {
-                        switch (response) {
-                            case "success":
-                                $("#modal_input_pasien").modal("hide");
-                                swal({
-                                    text: "Data Berhasil disimpan!",
-                                    icon: "success",
-                                    button: false,
-                                });
-                                break;
-                            case "updated":
-                                $("#modal_input_pasien").modal("hide");
-                                swal({
-                                    text: "Data Berhasil diupdate!",
-                                    icon: "success",
-                                    button: false,
-                                });
-                                break;
-                            case "failed":
-                            case "error":
-                                swal({
-                                    text: "Data gagal disimpan!",
-                                    icon: "error",
-                                    button: false,
-                                });
-                                break;
-                        }
-                        tabel_user.ajax.reload(null, false);
-                        clearnbtn();
-                    }
-                });
+                // $.ajax({
+                //     url: "../payload",
+                //     type: "POST",
+                //     dataType: "json",
+                //     data: "action=" + action + "&"
+                //         + "dp_id=" + hid + "&"
+                //         + $.param(df),
+                //     complete: function () {
+                //         $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                //     },
+                //     error: function (xhr, status, error) {
+                //         console.log(error);
+                //         $("#simpan_input_pasien").text("Simpan data lanjutan").removeClass("disabled");
+                //     },
+                //     success: function (response) {
+                //         switch (response) {
+                //             case "success":
+                //                 $("#modal_input_pasien").modal("hide");
+                //                 swal({
+                //                     text: "Data Berhasil disimpan!",
+                //                     icon: "success",
+                //                     button: false,
+                //                 });
+                //                 break;
+                //             case "updated":
+                //                 $("#modal_input_pasien").modal("hide");
+                //                 swal({
+                //                     text: "Data Berhasil diupdate!",
+                //                     icon: "success",
+                //                     button: false,
+                //                 });
+                //                 break;
+                //             case "failed":
+                //             case "error":
+                //                 swal({
+                //                     text: "Data gagal disimpan!",
+                //                     icon: "error",
+                //                     button: false,
+                //                 });
+                //                 break;
+                //         }
+                //         tabel_user.ajax.reload(null, false);
+                //         clearnbtn();
+                //     }
+                // });
+            });
+
+            $(".shp, .shpr").on("click", function (event) {
+                var cls = $(this).attr('class').toString();
+                var rcls = cls.replace('input-group-text ', '');
+                var ft = rcls == "shp" ? "user_password" : "user_password_repeat";
+                if ($("#" + ft).attr("type") == "password") {
+                    $("#" + rcls).removeClass("fa-eye fa-eye-slash");
+                    $("#" + rcls).addClass("fa-fw fa-eye");
+                    $("#" + ft).attr("type", "text");
+                } else {
+                    $("#" + rcls).removeClass("fa-fw fa-eye");
+                    $("#" + rcls).addClass("fa-eye fa-eye-slash");
+                    $("#" + ft).attr("type", "password");
+                }
             });
         });
     });

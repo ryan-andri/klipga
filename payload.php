@@ -369,6 +369,84 @@ switch ($cmd) {
             echo json_encode("gagal");
         }
         break;
+    case 'load_users':
+        try {
+            $draw = $_POST['draw'];
+            $rows = $_POST['start'];
+            $rowperpage = $_POST['length'];
+            $columnIndex = $_POST['order'][0]['column'];
+            $columnName = $_POST['columns'][$columnIndex]['data'];
+            $columnSortOrder = $_POST['order'][0]['dir'];
+            $searchValue = $_POST['search']['value'];
+
+            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_user WHERE status_user=1 ");
+            $stmt->execute();
+            $records = $stmt->fetch();
+            $totalRecords = $records['allcount'];
+
+            $searchArray = array();
+            $searchQuery = " ";
+            if (!empty($searchValue)) {
+                $searchQuery = "AND (nama_user LIKE :nama_user OR username_user	LIKE :username_user) ";
+                $searchArray = array(
+                    'nama_user' => "%$searchValue%",
+                    'username_user' => "%$searchValue%"
+                );
+            }
+
+            $final_filter = " status_user=1 " . $searchQuery;
+
+            // usleep(200000);
+
+            $stmt = $db->prepare("SELECT COUNT(*) AS allcount FROM data_user WHERE" . $final_filter);
+            $stmt->execute($searchArray);
+            $records = $stmt->fetch();
+            $totalRecordwithFilter = $records['allcount'];
+
+            usleep(400000);
+
+            $fields = "SELECT * FROM data_user WHERE ";
+
+            $stmt = $db->prepare($fields . $final_filter . " LIMIT :limit,:offset");
+
+            foreach ($searchArray as $key => $search) {
+                $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
+            }
+
+            $stmt->bindValue(':limit', (int)$rows, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
+            $stmt->execute();
+            $res = $stmt->fetchAll();
+            $data = array();
+
+            foreach ($res as $row) {
+                $data[] = array(
+                    'id_user' => $row['id_user'],
+                    'nama_user' => $row['nama_user'],
+                    'username_user' => $row['username_user'],
+                    'password_user' => $row['password_user'],
+                    'role_user' => $row['role_user'],
+                    'status_user' => $row['status_user']
+                );
+            }
+
+            // usleep(200000);
+
+            echo json_encode(array(
+                "draw" => intval($draw),
+                "recordsTotal" => $totalRecords,
+                "recordsFiltered" => $totalRecordwithFilter,
+                "data" => $data
+            ));
+        } catch (PDOException $e) {
+            echo json_encode(array(
+                "draw" => 0,
+                "recordsTotal" => 0,
+                "recordsFiltered" => 0,
+                "data" => null
+            ));
+        }
+        break;
     default:
         break;
 }
