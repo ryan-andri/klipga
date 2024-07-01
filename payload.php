@@ -347,17 +347,16 @@ switch ($cmd) {
         $query = "SELECT * FROM data_user WHERE username_user=?";
         $stmt = $db->prepare($query);
         $stmt->execute([$login_user]);
-        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $res = $stmt->fetch();
 
         if ($res) {
-            $final = array();
-            foreach ($res as $data) {
-                $final = $data;
-            }
-            if (password_verify($login_pass, $final['password_user'])) {
+            if (
+                password_verify($login_pass, $res['password_user'])
+                && $res['status_user'] == 1
+            ) {
                 $_SESSION['is_loged'] = true;
-                $_SESSION['role'] = $final['role_user'];
-                $_SESSION['user'] = $final['nama_user'];
+                $_SESSION['role'] = $res['role_user'];
+                $_SESSION['user'] = $res['nama_user'];
                 $_SESSION['timeout'] = time();
                 $_SESSION['ip_addr'] = md5($_SERVER['REMOTE_ADDR']);
                 $_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);
@@ -446,6 +445,9 @@ switch ($cmd) {
                 "data" => null
             ));
         }
+        break;
+    case 'update_user':
+    case 'simpan_user':
         break;
     default:
         break;

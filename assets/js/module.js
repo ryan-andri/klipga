@@ -23,7 +23,7 @@ $(document).ready(function () {
             dataType: "json",
             data: {
                 action: "dashboard",
-                today: today = today
+                today: today
             },
             success: function (response) {
                 switch (response.status) {
@@ -226,6 +226,24 @@ $(document).ready(function () {
                             text: "Refresh",
                             action: function (e, dt, node, config) {
                                 tabel_pasien.ajax.reload(null, false);
+                                clearnbtn();
+                            },
+                            enabled: true
+                        },
+                        {
+                            text: "Export Data",
+                            action: function (e, dt, node, config) {
+                                $.ajax({
+                                    url: 'export',
+                                    type: 'POST',
+                                    data: { filter: $("#filter_data").val(), ts: today },
+                                    complete: function () {
+                                        window.open('export');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log(error);
+                                    },
+                                });
                                 clearnbtn();
                             },
                             enabled: true
