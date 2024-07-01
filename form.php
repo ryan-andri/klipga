@@ -364,7 +364,7 @@ require('configs/config.php');
                 $("#simpan_pasien").text("Menyimpan Data ...").addClass("disabled");
 
                 $.ajax({
-                    url: "payload.php",
+                    url: "payload",
                     type: "POST",
                     dataType: "json",
                     data: "action=insert&" + $.param(df),
