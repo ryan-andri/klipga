@@ -289,12 +289,12 @@ switch ($cmd) {
     case 'dashboard':
         try {
             $today = $_POST['today'];
-            $query = "SELECT COUNT(*) AS record_sudah FROM data_pasien WHERE dp_status=1 ";
+            $query = "SELECT COUNT(*) AS total_record FROM data_pasien WHERE dp_status=1 ";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
             $records = $stmt->fetch();
-            $record_sudah = $records['record_sudah'];
+            $total_record = $records['total_record'];
 
             usleep(500000);
 
@@ -316,7 +316,7 @@ switch ($cmd) {
             echo json_encode(
                 array(
                     "status" => "success",
-                    "record_sudah" => $record_sudah,
+                    "total_record" => $total_record,
                     "record_belum" => $record_belum,
                     "todayrecords" => $todayrecords,
                     "messages" => ""

@@ -5,12 +5,17 @@ require('auth.php');
 
 require_once BASE_PATH . '/assets/vendor/phpxls/PhpXlsxGenerator.php';
 
-if (array_key_exists('filter', $_POST)) {
-    if (array_key_exists('ts', $_POST)) {
-        $_SESSION['filter'] = $_POST['filter'];
-        $_SESSION['date_now'] = $_POST['ts'];
-    }
-    die("no parameter input!");
+if (array_key_exists('filter', $_POST) && array_key_exists('ts', $_POST)) {
+    $_SESSION['filter'] = $_POST['filter'];
+    $_SESSION['date_now'] = $_POST['ts'];
+    Header("Content-Type: application/json;charset=UTF-8");
+    die(json_encode(array('status' => 'OK')));
+}
+
+if (
+    !isset($_SESSION['filter']) || !isset($_SESSION['date_now'])
+) {
+    die(header('HTTP/1.0 403 Forbidden', true, 403));
 }
 
 $filter = $_SESSION['filter'];

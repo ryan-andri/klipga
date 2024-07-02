@@ -28,7 +28,7 @@ $(document).ready(function () {
             success: function (response) {
                 switch (response.status) {
                     case "success":
-                        $("#record_sudah").text(response.record_sudah + " orang");
+                        $("#total_record").text(response.total_record + " orang");
                         $("#record_belum").text(response.record_belum + " orang");
                         $("#today_record").text(response.todayrecords + " orang");
                         break;
@@ -244,7 +244,6 @@ $(document).ready(function () {
                                         console.log(error);
                                     },
                                 });
-                                clearnbtn();
                             },
                             enabled: true
                         }
