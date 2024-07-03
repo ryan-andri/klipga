@@ -36,7 +36,7 @@ require('configs/config.php');
                     <h3>Form Pasien TBC</h3>
                 </div>
                 <div class="card p-3 mb-4" style="background-color: #ff000000;">
-                    <form id="form_pasien">
+                    <form autocomplete="off" id="form_pasien">
                         <div class="row">
                             <!-- DATA PASIEN -->
                             <div class="d-flex justify-content-center">
