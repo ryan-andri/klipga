@@ -975,8 +975,8 @@ $(document).ready(function () {
     });
 
     $("#ubah_password").on("click", function (event) {
+        $("#form_ubah_pass")[0].reset();
         $("#modal_ubah_pass").modal("show");
-
         $("#btn_chg_pass").on("click", function (event) {
             var valid = true;
             $("#form_ubah_pass input").each(function () {
