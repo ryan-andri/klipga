@@ -69,7 +69,7 @@ if (isset($_SESSION['is_loged'])) {
 <body class="text-center">
     <main class="form-signin">
         <form id="form_login">
-            <img class="mb-2" src="<?= BASE_URL ?>/assets/img/hesti.png" alt="" width="75" height="75">
+            <img class="mb-2" src="<?= BASE_URL ?>/assets/img/hesti.png" alt="logo" width="75" height="75">
             <h4>KLIPGA</h4>
             <h4 class="mb-3">Rumah Sakit Umum dr. AK Gani</h4>
             <div class="form-floating mb-2">

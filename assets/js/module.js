@@ -15,7 +15,21 @@ $(document).ready(function () {
     });
 
     function get_data_dashboard() {
-        $("#date_dashboard").text(today);
+        var harian = [
+            "Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"
+        ];
+        var bulanan = [
+            "bulan", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        var date = new Date(today);
+        var hari = date.getDate();
+        var tahun = date.getFullYear();
+        var bulan = date.getMonth();
+        bulan += 1;
+
+        var fdate = harian[date.getDay()] + ", " + hari + " " + bulanan[bulan] + " " + tahun;
+
+        $("#date_dashboard").text(fdate);
         $("#loading").removeClass("d-none");
 
         $.ajax({
