@@ -15,6 +15,7 @@ $(document).ready(function () {
     });
 
     function get_data_dashboard() {
+        $("#date_dashboard").text(today);
         $("#loading").removeClass("d-none");
 
         $.ajax({
