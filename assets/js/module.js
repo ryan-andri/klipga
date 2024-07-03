@@ -945,6 +945,102 @@ $(document).ready(function () {
         });
     });
 
+    $(".pl, .pb, .pbr").on("click", function (event) {
+        var final = "";
+        var cls = $(this).attr('class').toString();
+        var rcls = cls.replace('input-group-text ', '');
+
+        switch (rcls) {
+            case "pl":
+                final = "pass_lama";
+                break;
+            case "pb":
+                final = "pass_baru";
+                break;
+            case "pbr":
+                final = "pass_baru_repeat";
+                break;
+
+        }
+
+        if ($("#" + final).attr("type") == "password") {
+            $("#" + rcls).removeClass("fa-eye fa-eye-slash");
+            $("#" + rcls).addClass("fa-fw fa-eye");
+            $("#" + final).attr("type", "text");
+        } else {
+            $("#" + rcls).removeClass("fa-fw fa-eye");
+            $("#" + rcls).addClass("fa-eye fa-eye-slash");
+            $("#" + final).attr("type", "password");
+        }
+    });
+
+    $("#ubah_password").on("click", function (event) {
+        $("#modal_ubah_pass").modal("show");
+
+        $("#btn_chg_pass").on("click", function (event) {
+            var valid = true;
+            $("#form_ubah_pass input").each(function () {
+                if ($.trim($(this).val()).length == 0) {
+                    $(this).addClass("error");
+                    valid = false;
+                    $(this).focus();
+                } else {
+                    $(this).removeClass("error");
+                }
+            });
+
+            if (!valid) {
+                return alert("Semua kolom harus di isi!");
+            }
+
+            if ($("#pass_baru").val() != $("#pass_baru_repeat").val()) {
+                alert("Password baru tidak sama!");
+                return;
+            }
+
+            let df = $("#form_ubah_pass").serializeArray();
+
+            $.ajax({
+                url: '../payload',
+                type: 'POST',
+                dataType: "json",
+                data: "action=ubah_password&" + "hid_user="
+                    + $("#hid_user").val() + "&" + $.param(df),
+                success: function (response) {
+                    switch (response) {
+                        case "success":
+                            $("#modal_ubah_pass").modal("hide");
+                            swal({
+                                title: 'Password telah di ubah',
+                                text: 'Anda Harus login kembali',
+                                icon: 'success',
+                                timer: 1500,
+                                buttons: false,
+                            }).then(() => {
+                                window.location.replace('../logout');
+                            })
+                            break;
+                        case "failed":
+                            alert("Gagal simpan password baru!");
+                            break;
+                        case "wp":
+                            alert("Password salah!");
+                            break;
+                        case "error":
+                            alert("Error, Hubungi IT!");
+                            break;
+                        case "wpn":
+                            alert("Password tidak sama!");
+                            break;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                },
+            });
+        });
+    });
+
     $("#logout").on("click", function (event) {
         event.preventDefault();
         swal({

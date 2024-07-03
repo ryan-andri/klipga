@@ -38,7 +38,7 @@ require('auth.php');
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" id="navbarDropdown" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:grey;"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!"><i class="fas fa-key me-2"></i><span>Ubah Password</span></a></li>
+                    <li><a class="dropdown-item" id="ubah_password" href="#!"><i class="fas fa-key me-2"></i><span>Ubah Password</span></a></li>
                     <li><a class="dropdown-item" id="logout" href="#!">Logout</a></li>
                 </ul>
             </li>
@@ -75,6 +75,47 @@ require('auth.php');
                 </div>
             </nav>
         </div>
+
+        <div class="modal fade" id="modal_ubah_pass" tabindex="-1" aria-labelledby="ubahPassword" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ubah Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form autocomplete="off" id="form_ubah_pass">
+                            <input type="text" name="hid_user" class="form-control" id="hid_user" value="<?php echo $_SESSION['id_sess']; ?>" hidden>
+                            <div class="input-group mb-3">
+                                <div class="form-floating">
+                                    <input id="pass_lama" type="password" class="form-control" name="pass_lama" placeholder="Password lama">
+                                    <label for="pass_lama">Password lama</label>
+                                </div>
+                                <span class="input-group-text pl"><i class="fa fa-eye fa-eye-slash" id="pl"></i></span>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="form-floating">
+                                    <input id="pass_baru" type="password" class="form-control" name="pass_baru" placeholder="Password baru">
+                                    <label for="pass_baru">Password baru</label>
+                                </div>
+                                <span class="input-group-text pb"><i class="fa fa-eye fa-eye-slash" id="pb"></i></span>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="form-floating">
+                                    <input id="pass_baru_repeat" type="password" class="form-control" name="pass_baru_repeat" placeholder="Ulangi password baru">
+                                    <label for="pass_baru_repeat">Ulangi password baru</label>
+                                </div>
+                                <span class="input-group-text pbr"><i class="fa fa-eye fa-eye-slash" id="pbr"></i></span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="btn_chg_pass" class="btn btn-danger form-control mb-0">Ubah Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-2">

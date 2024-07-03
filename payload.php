@@ -357,6 +357,7 @@ switch ($cmd) {
                 $_SESSION['is_loged'] = true;
                 $_SESSION['role'] = $res['role_user'];
                 $_SESSION['user'] = $res['nama_user'];
+                $_SESSION['id_sess'] = $res['id_user'];
                 $_SESSION['timeout'] = time();
                 $_SESSION['ip_addr'] = md5($_SERVER['REMOTE_ADDR']);
                 $_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);
@@ -448,6 +449,39 @@ switch ($cmd) {
         break;
     case 'update_user':
     case 'simpan_user':
+        break;
+    case 'ubah_password':
+        $hid_user = htmlspecialchars($_POST['hid_user']);
+        $pass_lama = htmlspecialchars($_POST['pass_lama']);
+        $pass_baru = htmlspecialchars($_POST['pass_baru']);
+        $pass_baru_repeat = htmlspecialchars($_POST['pass_baru_repeat']);
+
+        if ($pass_baru != $pass_baru_repeat) {
+            echo json_encode("wpn");
+            die();
+        }
+
+        $query = "SELECT * FROM data_user WHERE id_user=?";
+        $stmt = $db->prepare($query);
+        $stmt->execute([$hid_user]);
+        $res = $stmt->fetch();
+
+        if ($res) {
+            if (password_verify($pass_lama, $res['password_user'])) {
+                $hash = password_hash($pass_baru, PASSWORD_DEFAULT);
+                $stmt = $db->prepare("UPDATE data_user SET password_user=? WHERE id_user=?");
+                $res = $stmt->execute([$hash, $hid_user]);
+                if ($res) {
+                    echo json_encode("success");
+                } else {
+                    echo json_encode("failed");
+                }
+            } else {
+                echo json_encode("wp");
+            }
+        } else {
+            echo json_encode("error");
+        }
         break;
     default:
         break;
